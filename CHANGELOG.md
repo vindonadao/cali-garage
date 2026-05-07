@@ -8,6 +8,53 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.2 — Released (2026-05-07)
+
+### Trigger
+Cliente reagiu à rev-0.1 deployada: "as cores estão muito sem vida, falta toque artístico, está muito esse marrom apagado".
+
+### Diagnóstico (Brand Chief)
+Cor de marca `#C8622A` está fiel à fachada — problema é o ecossistema cinza-neutro frio (Nixtio dark) que sequestra a vivacidade da terracota. **Solução: reconciliar paleta de fundo com a família cromática quente da cor primária.**
+
+### Mudanças
+- **Backgrounds** saem de cinza-neutro (`#141414`/`#1B1B1B`/`#1F1F1F`) para **warm dark cocoa** (`#1A1410`/`#221A14`/`#2A1F18`)
+- **Texto** sai de branco frio (`#F5F5F5`) para **cream papel envelhecido** (`#F4ECE0`)
+- **Borders** + **muted** todos warmer (família cromática quente)
+- **Nova classe `.section-cream`** com surface `#F5F1EA` (Wheeler §3.3 expansion)
+- **Alternância dark/cream/dark** aplicada: index (Por que escolher → cream, About/Stats → cream), sobre (story → cream), serviços (listing → cream), contato (form → cream)
+- **Cards dentro de seções cream** invertem hierarquia → warm dark sobre cream (contraste máximo)
+- **Noise overlay sutil** (opacity 0.04) via SVG turbulência — materialidade vivida do Archetype §5
+- **Cor primária `#C8622A` LITERALMENTE INALTERADA** (Wheeler §1.2 sacred preservado)
+- **Logo, ângulos, balanço assimétrico** todos preservados
+
+### Squad envolvido
+- Brand Chief — diagnóstico e roteamento
+- Alina Wheeler — aprovou (override é apenas EXPANSÃO da §3.3 de pares aprovados)
+- Archetype Consultant — aprovou (warm dark + cream é Everyman+Explorer puro)
+- Emily Heyward — aprovou (energia DTC vem da TENSÃO entre seções alternando)
+
+### Tensão produtiva resolvida
+> A terracota mantém sua equity de 10 anos enquanto o ecossistema ao redor ganha família cromática quente que a deixa respirar — o site fica mais vizinho-de-bairro (Everyman) E mais Cali/road-trip (Explorer) ao mesmo tempo.
+
+### Files modificados
+- `rev-0.1/css/style.css` — 22 tokens trocados, 5 rgba migrados, 110 linhas de `.section-cream` rules + noise overlay
+- `rev-0.1/index.html` — 2 sections com `.section-cream`
+- `rev-0.1/sobre.html` — 1 section com `.section-cream`
+- `rev-0.1/servicos.html` — 1 section com `.section-cream`
+- `rev-0.1/contato.html` — 1 section com `.section-cream`
+- `rev-0.2/brand/palette-revision.md` (novo) — spec estratégica
+- `rev-0.2/brand/IMPLEMENTATION-NOTES.md` (novo) — instruções token-by-token
+
+### Acceptance criteria (Brand Chief)
+- ✅ Cor primária inalterada literalmente
+- ✅ Backgrounds em família quente cocoa
+- ✅ Texto cream (não branco frio)
+- ✅ Alternância dark/cream/dark aplicada
+- ✅ Noise overlay sutil (não ruidoso)
+- ⏳ Cliente leigo descreve cor como "cobre/terracota" (validação a campo)
+
+---
+
 ## rev-0.1 — Released (2026-05-07)
 
 ### Adicionado
