@@ -14,19 +14,19 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 
 /* ---------- TOKENS ---------- */
 :root {
-  /* Brand color (sacred — Wheeler §1.2 INTACTA) */
-  --color-orange: #C8622A;
-  --color-orange-light: #E8A765;          /* sunset sand (rev-0.2) */
-  --color-orange-dark: #A04E1F;
-  --color-orange-soft: rgba(200, 98, 42, 0.18);
+  /* Brand color — bump rev-0.3 (still in terracotta family, mais vivo) */
+  --color-orange: #DD6520;                /* era #C8622A — burnt copper mais vivo */
+  --color-orange-light: #F2925A;          /* sunset mais quente */
+  --color-orange-dark: #B04A18;           /* compatível com o novo tom */
+  --color-orange-soft: rgba(221, 101, 32, 0.28);
 
-  /* Backgrounds — warm dark cocoa family (rev-0.2) */
-  --color-bg: #1A1410;                    /* warm ink */
-  --color-bg-2: #231A14;                  /* cocoa profundo */
-  --color-surface: #221A14;               /* warm dark surface */
-  --color-surface-2: #2A1F18;             /* warm cocoa */
-  --color-card: #2A1F18;                  /* consolidado */
-  --color-card-2: #34271E;                /* warm cocoa elevado */
+  /* Backgrounds — warm dark mais profundo p/ contraste (rev-0.3) */
+  --color-bg: #15100C;                    /* warm ink mais profundo */
+  --color-bg-2: #1D150F;                  /* cocoa */
+  --color-surface: #1D150F;
+  --color-surface-2: #261B14;
+  --color-card: #1F1610;                  /* mais escuro pra o orange saltar */
+  --color-card-2: #2B1F17;
 
   /* Text & borders — warm cream family (rev-0.2) */
   --color-text: #F4ECE0;                  /* cream papel envelhecido */
@@ -123,7 +123,7 @@ p { color: var(--color-text-muted); }
   height: 7px;
   border-radius: 50%;
   background-color: var(--color-orange);
-  box-shadow: 0 0 0 4px rgba(200, 98, 42, 0.18);
+  box-shadow: 0 0 0 4px rgba(221, 101, 32, 0.18);
 }
 
 .pill-ghost {
@@ -301,7 +301,7 @@ p { color: var(--color-text-muted); }
 .btn-primary {
   background-color: var(--color-orange);
   color: #fff;
-  box-shadow: 0 8px 24px rgba(200, 98, 42, 0.32);
+  box-shadow: 0 8px 24px rgba(221, 101, 32, 0.32);
 }
 .btn-primary:hover { background-color: var(--color-orange-light); transform: translateY(-2px); }
 .btn-primary::after { content: '↗'; font-size: 1rem; }
@@ -340,7 +340,7 @@ p { color: var(--color-text-muted); }
   right: -200px;
   width: 700px;
   height: 700px;
-  background: radial-gradient(circle, rgba(200, 98, 42, 0.18), transparent 60%);
+  background: radial-gradient(circle, rgba(221, 101, 32, 0.18), transparent 60%);
   pointer-events: none;
 }
 
@@ -429,7 +429,7 @@ p { color: var(--color-text-muted); }
   border-radius: var(--radius-xl);
   overflow: hidden;
   background:
-    linear-gradient(160deg, rgba(200, 98, 42, 0.35), rgba(26, 20, 16, 0.6)),
+    linear-gradient(160deg, rgba(221, 101, 32, 0.35), rgba(26, 20, 16, 0.6)),
     radial-gradient(circle at 30% 20%, rgba(255,255,255,0.06), transparent 50%),
     var(--color-card);
   border: 1px solid var(--color-border-strong);
@@ -709,7 +709,7 @@ p { color: var(--color-text-muted); }
   aspect-ratio: 4 / 5;
   border-radius: var(--radius-xl);
   background:
-    linear-gradient(160deg, rgba(200, 98, 42, 0.28), rgba(26, 20, 16, 0.75)),
+    linear-gradient(160deg, rgba(221, 101, 32, 0.28), rgba(26, 20, 16, 0.75)),
     var(--color-card);
   border: 1px solid var(--color-border-strong);
   display: flex;
@@ -787,7 +787,7 @@ p { color: var(--color-text-muted); }
 
 .gallery-placeholder {
   background:
-    radial-gradient(circle at 70% 20%, rgba(200, 98, 42, 0.2), transparent 55%),
+    radial-gradient(circle at 70% 20%, rgba(221, 101, 32, 0.2), transparent 55%),
     repeating-linear-gradient(45deg, var(--color-card) 0 10px, var(--color-card-2) 10px 20px);
 }
 
@@ -1066,7 +1066,7 @@ p { color: var(--color-text-muted); }
   right: -150px;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(200,98,42,0.18), transparent 60%);
+  background: radial-gradient(circle, rgba(221,101,32,0.18), transparent 60%);
   pointer-events: none;
 }
 
@@ -1223,8 +1223,14 @@ p { color: var(--color-text-muted); }
 .section-cream .stat-number .accent {
   color: var(--color-orange);
 }
-.section-cream .stat-label {
-  color: var(--color-muted-on-cream);
+/* IMPORTANTE: stat-label aqui está DENTRO de cards warm dark (.stat / .stat-item)
+   então usa cream-text (light) e não muted-on-cream (dark) — fix rev-0.3 */
+.section-cream .stat .stat-label,
+.section-cream .stat-item .stat-label,
+.section-cream .feature-card .stat-label,
+.section-cream .service-card .stat-label {
+  color: var(--color-text);
+  opacity: 0.85;
 }
 
 /* Reviews summary inside cream */
@@ -1255,7 +1261,7 @@ p { color: var(--color-text-muted); }
 /* About image keeps warm dark even inside cream */
 .section-cream .about-image {
   background:
-    linear-gradient(160deg, rgba(200, 98, 42, 0.32), rgba(26, 20, 16, 0.78)),
+    linear-gradient(160deg, rgba(221, 101, 32, 0.32), rgba(26, 20, 16, 0.78)),
     var(--color-card);
 }
 
@@ -1270,7 +1276,7 @@ body::before {
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.04;
+  opacity: 0.02;                          /* rev-0.3: reduzido de 0.04 — não interferir vibrância */
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
 }

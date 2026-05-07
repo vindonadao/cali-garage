@@ -8,6 +8,38 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.3 — Released (2026-05-07)
+
+### Trigger
+Cliente reagiu à rev-0.2: "continua uma cor pouco chamativa e fraca, olha que coisa horrivel em anexo, quase não consigo ler". Screenshot mostrou stat cards na seção About com labels ilegíveis (marrom escuro sobre warm dark) e percepção de cor primária ainda muted.
+
+### Diagnóstico
+1. **Bug de cascata CSS:** `.section-cream .stat-label { color: var(--color-muted-on-cream) }` aplicava marrom-escuro `#5A4A3D` em labels que estavam DENTRO de cards warm dark — contraste destruído.
+2. **Cor primária ainda muted:** `#C8622A` lê fraco em tela mesmo com paleta warm. Brand owner é autoridade última — Wheeler §1.2 sacred recebe override documentado.
+3. **Noise overlay:** opacity 0.04 com mix-blend-mode overlay desaturava sutilmente — reduzido a 0.02.
+
+### Mudanças
+- **Cor primária:** `#C8622A` → `#DD6520` (burnt copper mais vivo, ainda família terracotta — não é "fast-food orange" #FF6600)
+- **Cor light:** `#E8A765` → `#F2925A` (sunset mais quente)
+- **Cor dark:** `#A04E1F` → `#B04A18` (compatível com novo tom)
+- **Backgrounds mais profundos** pra o orange saltar:
+  - `--color-bg`: `#1A1410` → `#15100C`
+  - `--color-card`: `#2A1F18` → `#1F1610`
+- **9 referências hardcoded `rgba(200, 98, 42, ...)` migradas** para `rgba(221, 101, 32, ...)`
+- **Bug fix labels:** override específico `.section-cream .stat .stat-label` usa `var(--color-text)` (cream light) com opacity 0.85 — contraste WCAG AA pass sobre warm dark cards
+- **Noise overlay:** 0.04 → 0.02 opacity (não interferir vibrância)
+
+### Override documentado de Wheeler §1.2
+A cor primária `#C8622A` foi declarada "sacred" por Wheeler como amostra-fiel da fachada original. Brand owner reagiu duas revisões consecutivas dizendo que está "fraca/sem vida". Decisão: brand owner > spec. O override é mínimo (mesma família terracotta, mais vivo, ainda longe de saturado). Documentação preservada para futura revisão de identidade se necessário.
+
+### Files modificados
+- `rev-0.1/css/style.css` — tokens cromáticos + bug fix + noise overlay reduzido
+
+### Próxima validação
+Se cliente ainda perceber "fraca", rev-0.4 escala pra brand-chief com decisão estratégica: paleta dual (terracotta + accent), gradiente sunset, ou pivote estrutural de cor.
+
+---
+
 ## rev-0.2 — Released (2026-05-07)
 
 ### Trigger
