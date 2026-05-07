@@ -8,6 +8,22 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.5 — Released (2026-05-07)
+
+### Adicionado
+- **Donadão Labs built-by signature** em todas as 6 páginas — stripe abaixo do `.site-footer`, antes do WhatsApp float
+- **Inter Tight 700** carregada via Google Fonts (peso único, +1 webfont request)
+- Brand mark "Donadão Labs" em **Inter Tight 700, 48px, letter-spacing -0.025em** conforme spec global do usuário
+- Tagline italic "AI software that actually ships."
+- Links pra `donadaolabs.com` e `@donadaolabs` (target="_blank" rel="noopener")
+- Background mais profundo `#0E0A07` pra separar visualmente do site-footer
+- Mobile: brand 36px, padding reduzido
+
+### Bug fix durante implementação
+- Primeiro pass do Python script usou marker ambíguo (`<a href="https://wa.me/...`) que matchou o `nav-cta` do navbar antes do `whatsapp-float`, inserindo o signature DENTRO do `<nav>`. Corrigido com regex pra remover inserção errada + marker específico (`class="whatsapp-float"`).
+
+---
+
 ## rev-0.4 — Released (2026-05-07)
 
 ### Trigger
