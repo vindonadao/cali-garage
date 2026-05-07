@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Cali Garage">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+      .cg-mark { font-family: 'Shrikhand', 'Anton', sans-serif; fill: currentColor; }
+    </style>
+  </defs>
+  <g class="cg-mark">
+    <text x="100" y="90" font-size="74" text-anchor="middle" transform="rotate(-4 100 78)">CALI</text>
+    <g transform="translate(100, 115)">
+      <path d="M0,-16 L4.7,-5 L16,-5 L6.5,1.9 L10.3,12.9 L0,6.4 L-10.3,12.9 L-6.5,1.9 L-16,-5 L-4.7,-5 Z" />
+    </g>
+    <path d="M40 138 Q100 152 160 134" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round" />
+    <text x="100" y="180" font-size="36" text-anchor="middle" transform="rotate(3 100 168)">GARAGE</text>
+  </g>
+</svg>

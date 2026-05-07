@@ -1,0 +1,58 @@
+# Changelog — Cali Garage
+
+Todas as mudanças significativas neste projeto são documentadas aqui.
+
+Versionamento por revisões: `rev-X.Y` onde:
+- **X** = major redesign (mudança estrutural de visual language ou IA)
+- **Y** = iteração / refinamento dentro do mesmo redesign
+
+---
+
+## rev-0.1 — Released (2026-05-07)
+
+### Adicionado
+- **Brand Squad acionado** — Brand Chief diagnosticou e roteou para Alina Wheeler (lead) + Archetype Consultant (suporte)
+- **`brand/identity-system.md`** (Wheeler) — sistema completo de identidade: 5 variantes (primary, stacked, mark-only, wordmark, monogram), cores (`#C8622A` Cali Copper), tipografia (Anton + Inter confirmadas), clearspace, tamanhos mínimos por touchpoint, application guidelines (web, fachada, uniforme, fiscal, social, cartão)
+- **`brand/archetype.md`** (Archetype Consultant) — arquétipo Everyman 65% + Explorer 35%, tensão produtiva "o vizinho que tem rota própria", 5 princípios de tone of voice, 5 visual personality anchors, do/don't, voice samples
+- **Logo retrabalhado** seguindo brief Wheeler:
+  - Navbar: HTML+CSS com Anton + estrela ★ + rotações leves (CALI -2°, GARAGE +1°)
+  - Hero/About/Footer: SVG inline (font Anton herda do CSS, sem sandbox issue), CALI rotate(+6°), GARAGE rotate(-3°), estrela 5-pontas com ponta superior arredondada (preservando imperfeição), swoosh tapered de 4 curvas Bézier
+  - Cor única `#C8622A` em todas as instâncias
+  - **Filtros removidos** (Wheeler §1.4: "Não adicione efeitos drop shadow, gradiente, bevel...")
+  - **Shrikhand removida** (Wheeler §1.4: "Não substitua o brush por uma fonte digital 'parecida'")
+
+### Pendente para rev-0.2
+- **Foto em alta da fachada** — para auto-trace do logo brush original (path mais fiel)
+- **Aplicar identity system completo** — variantes stacked/wordmark/monogram quando os contextos surgirem
+- **Páginas internas** — propagar visual language Nixtio do home (page-header com pill ghost, cards numerados)
+- **Imagens reais** — substituir placeholders na galeria
+- **Deploy** — Netlify Drop, Cloudflare Pages ou GitHub Pages
+
+### Decisões arquivadas
+- **Não fingir pincelada que não conseguimos reproduzir.** Vetor honesto > filtro computacional falso. Quando hi-res photo da fachada chegar, fazemos auto-trace via potrace/Illustrator e plugamos como variante "brush authentic".
+
+---
+
+## rev-0 — Baseline (snapshot em `rev-0/`)
+
+### Adicionado
+- **Estrutura inicial do site** — 6 páginas HTML5 estáticas (index, sobre, serviços, galeria, avaliações, contato)
+- **CSS centralizado** — `css/style.css` com tokens de design (cores, raios, sombras, transições)
+- **Visual language inspirado em Nixtio** — pill nav flutuante, hero billboard arredondado, cards numerados, marquee, footer wordmark gigante
+- **SEO local** — meta tags `geo.*`, Schema.org `AutoRepair` com `aggregateRating`, `openingHoursSpecification`, `geo`, `address`
+- **WhatsApp** — botão flutuante com pulse animation + CTA no header em todas as páginas
+- **Logo SVG (tentativa 1)** — `img/logo.svg`, `img/logo-mark.svg`, `img/favicon.svg` usando Shrikhand + filtro distressed (resultado insatisfatório, será refeito em rev-0.1)
+- **Tipografia** — Anton (display), Inter (body), Shrikhand (logo) via Google Fonts
+- **Acessibilidade** — `aria-label`, `aria-expanded`, `:focus-visible`, contraste alto
+
+### Identidade visual base
+- Paleta: laranja/cobre `#C8622A`, carvão `#141414`/`#1E1E1E`, branco `#F5F5F5`
+- Sistema de raios: 10px → 18px → 28px → 40px → pill (999px)
+- Cubic-bezier `(0.2, 0.8, 0.2, 1)` para transições premium
+
+### Conteúdo institucional
+- Telefone: (13) 3222-3456
+- WhatsApp: (13) 99625-2628
+- Endereço: Av. Campos Sales, 98 — Vila Matias, Santos/SP, 11013-401
+- Horário: Seg–Sex, 08h às 18h
+- Avaliação Google: 4,7★ (15 opiniões)
