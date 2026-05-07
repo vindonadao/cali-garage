@@ -8,6 +8,50 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.4 — Released (2026-05-07)
+
+### Trigger
+Cliente forneceu o logo oficial em PDF vetorial (`PDF FABRICIO DA CALI.pdf`) — exatamente o que faltava pra fidelidade 1:1 da identidade visual. Encerra a busca por aproximação geométrica e tracing manual; agora temos o asset original.
+
+### Mudanças
+- **Logo source vetorial preservado** — `rev-0.1/img/logo-source.pdf` (62KB) arquivado no repo
+- **Conversão PDF → PNG transparente** via `pdftocairo` (poppler) em 400 DPI
+- **Crop preciso** com `sips --cropOffset` baseado nos clip-paths do SVG do PDF (logo + tagline em 2302×773)
+- **Compressão** para 1400px de largura → `rev-0.1/img/logo.png` (111KB)
+- **Técnica CSS mask-image** — PNG transparente como máscara + `background-color: var(--color-orange)` permite recolorir o logo via variável CSS sem gerar múltiplas variantes raster
+- **Substituição em todos os 6 HTMLs:**
+  - Navbar: HTML/CSS spans → `<span class="cg-logo-img">`
+  - Hero billboard, About-image, Footer-mark (index.html): SVGs inline removidos → `cg-logo-img`
+  - About-image (sobre.html): SVG inline → `cg-logo-img`
+  - Navbars das 5 páginas internas atualizadas
+- **Limpeza:** removidos `logo.svg` e `logo-mark.svg` (aproximações antigas que falharam)
+- **Toolchain instalada:** Homebrew + Poppler (`pdftocairo`) — disponível pra futuras conversões
+
+### Files modificados
+- `rev-0.1/img/logo.png` (NEW) — asset oficial
+- `rev-0.1/img/logo-source.pdf` (NEW) — source preservado
+- `rev-0.1/img/logo-mark.svg` (DELETED)
+- `rev-0.1/img/logo.svg` (DELETED)
+- `rev-0.1/css/style.css` — bloco LOGO SYSTEM reescrito
+- `rev-0.1/{index,sobre,servicos,galeria,avaliacoes,contato}.html` — todas instâncias
+
+### Pendência da rev-0.1 RESOLVIDA
+A pendência crítica documentada no `brand/README.md` ("Foto em alta da fachada para auto-trace") foi resolvida pelo cliente entregando o vetor digital direto. Auto-trace via potrace/Illustrator não foi mais necessário.
+
+### Vantagens da nova abordagem
+- **1 arquivo PNG** = logo em qualquer cor (controle via CSS)
+- **111KB** total para o asset (vs. ~200KB de SVG embedded raster)
+- **Cor responsiva** ao contexto (.section-cream, hero, footer — todos herdam `--color-orange`)
+- **Fidelidade 1:1** com o asset oficial do cliente
+- **Source PDF preservado** no repo — futuras conversões/variantes são triviais
+
+### Próximas variantes possíveis
+- `logo-mono-black.png` — pra impresso preto-e-branco
+- `logo-mono-white.png` — knockout sobre fundos saturados (gerável via CSS filter por enquanto)
+- `logo-mark-only.png` — só CALI ★ GARAGE sem tagline (recropar do PDF)
+
+---
+
 ## rev-0.3 — Released (2026-05-07)
 
 ### Trigger

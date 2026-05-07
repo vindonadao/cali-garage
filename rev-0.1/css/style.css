@@ -170,58 +170,52 @@ p { color: var(--color-text-muted); }
 }
 
 /* ============================================
-   LOGO SYSTEM (rev-0.1)
-   Spec: brand/identity-system.md
-   Trace honesto, ângulos sagrados +6°/-3°,
-   cor única #C8622A, zero efeitos digitais.
+   LOGO SYSTEM (rev-0.4)
+   Asset oficial fornecido pelo cliente: img/logo.png
+   Source: img/logo-source.pdf (Fabricio da Cali)
+   Técnica: CSS mask-image — PNG transparente + bg color
+   permite recolorir o logo via var(--color-orange) sem
+   gerar múltiplas variantes raster.
    ============================================ */
+
+.cg-logo-img {
+  display: inline-block;
+  aspect-ratio: 2302 / 773;
+  -webkit-mask-image: url('../img/logo.png');
+  -webkit-mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: url('../img/logo.png');
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-mode: alpha;
+  background-color: currentColor;
+  user-select: none;
+}
 
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
   color: var(--color-orange);
-  font-family: 'Anton', 'Bebas Neue', 'Impact', sans-serif;
-  text-transform: uppercase;
-  line-height: 1;
-  white-space: nowrap;
+  line-height: 0;
 }
 
-.logo .cg-cali {
-  font-size: 1.55rem;
-  display: inline-block;
-  transform: rotate(-2deg);
-  letter-spacing: 0.01em;
-}
-
-.logo .cg-star {
-  font-size: 1.05rem;
-  color: var(--color-orange);
-  transform: translateY(-0.15em) rotate(8deg);
-  display: inline-block;
-}
-
-.logo .cg-garage {
-  font-size: 1.1rem;
-  display: inline-block;
-  transform: rotate(1deg);
-  letter-spacing: 0.02em;
-}
-
-/* Inline SVG logo (hero, about, footer) */
-.cg-logo-svg {
-  display: block;
-  color: var(--color-orange);
+.logo .cg-logo-img {
+  height: 38px;
 }
 
 .hero-billboard-logo {
   width: 88%;
-  height: auto;
   align-self: center;
   margin: auto;
+  color: var(--color-orange);
 }
 
-.about-image .cg-logo-svg { width: 86%; }
+.about-image .cg-logo-img {
+  width: 86%;
+  color: var(--color-orange);
+}
 
 .footer-mark {
   border-bottom: 1px solid var(--color-border);
@@ -229,10 +223,14 @@ p { color: var(--color-text-muted); }
   margin-bottom: 3rem;
   color: var(--color-orange);
 }
-.footer-mark .cg-logo-svg {
+.footer-mark .cg-logo-img {
   width: 100%;
   max-width: 760px;
-  height: auto;
+}
+
+/* Em fundos cream o logo continua laranja (Wheeler §3.3) */
+.section-cream .cg-logo-img {
+  color: var(--color-orange);
 }
 
 .nav-toggle {
