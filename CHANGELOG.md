@@ -8,6 +8,26 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.6 — Released (2026-05-07)
+
+### Trigger
+Cliente reagiu à rev-0.5: "do jeito que tá ficou horrível, ajusta pra ficar no mesmo padrão do site, uma linha abaixo, nas cores do site não fora com a parte preta".
+
+### Mudanças (apenas CSS — markup mantido)
+- **Background:** `#0E0A07` (preto harsh) → `var(--color-bg-2)` `#1D150F` (warm cocoa, paleta do site)
+- **Layout:** 3 rows empilhadas em stripe gigante → **linha única inline**, flex-wrap em desktop, stack em mobile
+- **Brand mark size:** 48px → **1rem (~16px)** — em footer credit line, 48px era display headline (contexto errado pra spec global)
+- **Padding:** 4rem 1.5rem 3rem → 1.1rem 1.5rem (compacto, integrado)
+- **Separadores `·`** entre seções (row · tag · links)
+- **Border-top sutil** pra separação do `.site-footer` sem cortar o flow
+
+### Resultado
+Linha única elegante: `● Built by Donadão Labs · AI software that actually ships. · donadaolabs.com · @donadaolabs`
+
+Brand mark mantém Inter Tight 700 letter-spacing -0.025em (spec global respeitada na tipografia, escala adaptada ao contexto).
+
+---
+
 ## rev-0.5 — Released (2026-05-07)
 
 ### Adicionado
