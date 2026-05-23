@@ -8,6 +8,29 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.8 — Released (2026-05-10)
+
+### Foco
+Hardening de segurança e proteções contra phishing/spoofing. Avaliação do que faz sentido para landing page de serviços. Notas em [`rev-0.8/notes.md`](./rev-0.8/notes.md).
+
+### Decisões arquiteturais
+- **Sem banco de dados:** site não captura nada do visitante; toda comunicação é WhatsApp/telefone; avaliações são estáticas conforme brief
+- **Sem antivírus/WAF custom:** não há servidor; Vercel já protege na borda
+- **Foco principal:** preparar setup técnico de segurança para o momento de lançamento do domínio próprio (`caligarage.com.br`), evitando janela de phishing/spoofing durante a transição
+
+### Mudanças
+**1. Runbook de pós-compra do domínio**
+- Documento `rev-0.8/domain-launch-runbook.md` criado
+- 8 fases sequenciais com comandos prontos: DNS Vercel, CAA records, DNSSEC, SPF/DKIM/DMARC (cenários com e sem email), HSTS preload list, reversão das URLs vercel.app no código, Google Search Console, validação consolidada
+- Anexo sobre defesa contra perfis falsos em WhatsApp/Instagram via verificações oficiais
+
+### Files modificados
+- `rev-0.8/notes.md` (novo)
+- `rev-0.8/domain-launch-runbook.md` (novo)
+- `CHANGELOG.md` — esta entrada
+
+---
+
 ## rev-0.7 — Released (2026-05-10)
 
 ### Status
