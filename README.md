@@ -22,23 +22,28 @@ cali-garage/
 ├── README.md                  Este arquivo
 ├── CHANGELOG.md               Versionamento por revisões (rev-X.Y)
 ├── caligarage.md              Brief original do projeto (CLAUDE.md)
-├── rev-0/                     Snapshot imutável da rev-0
-└── rev-0.1/                   ← Pasta ativa de trabalho / entregável atual
-    ├── index.html             Home — hero billboard, features, services teaser, reviews, CTA
-    ├── sobre.html             Sobre a oficina, princípios, stats
-    ├── servicos.html          9 serviços detalhados
-    ├── galeria.html           Placeholders aguardando fotos reais
-    ├── avaliacoes.html        Resumo Google + 6 reviews
-    ├── contato.html           WhatsApp, telefone, mapa, horário
-    ├── css/
-    │   └── style.css          Stylesheet único (~1000 linhas)
-    ├── img/
-    │   ├── favicon.svg        Estrela + swoosh em quadrado escuro
-    │   └── logo-mark.svg      Mark-only (estrela + swoosh) em currentColor
-    └── brand/                 Deliverables estratégicos do Brand Squad
-        ├── README.md          Manual da pasta brand/
-        ├── identity-system.md Sistema completo de identidade (Alina Wheeler)
-        └── archetype.md       Arquétipo Everyman + Explorer (Archetype Consultant)
+├── rev-0/                     Snapshot imutável da baseline
+├── rev-0.1/                   ← Pasta ativa de trabalho / entregável atual (rev-0.6 vive aqui)
+│   ├── index.html             Home — hero billboard, features, services teaser, reviews, CTA
+│   ├── sobre.html             Sobre a oficina, princípios, stats
+│   ├── servicos.html          9 serviços detalhados
+│   ├── galeria.html           Placeholders aguardando fotos reais
+│   ├── avaliacoes.html        Resumo Google + 6 reviews
+│   ├── contato.html           WhatsApp, telefone, mapa, horário
+│   ├── css/
+│   │   └── style.css          Stylesheet único
+│   ├── img/
+│   │   ├── favicon.svg        Estrela + swoosh em quadrado escuro
+│   │   ├── logo.png           Logo oficial (rev-0.4) — usado via CSS mask-image
+│   │   └── logo-source.pdf    Vetor original do cliente (preservado)
+│   └── brand/                 Deliverables estratégicos do Brand Squad
+│       ├── README.md          Manual da pasta brand/
+│       ├── identity-system.md Sistema completo de identidade (Alina Wheeler)
+│       └── archetype.md       Arquétipo Everyman + Explorer (Archetype Consultant)
+└── rev-0.2/                   Specs estratégicas da revisão de paleta
+    └── brand/
+        ├── palette-revision.md       Spec da migração warm dark + cream
+        └── IMPLEMENTATION-NOTES.md   Instruções token-by-token
 ```
 
 ---
@@ -90,7 +95,7 @@ Convention global Donadão Labs: tags `rev-X.Y` + CHANGELOG.md em todos os proje
 - **X (major)** — redesign estrutural (visual language ou IA)
 - **Y (minor)** — iteração / refinamento dentro do mesmo redesign
 
-Estado atual: **rev-0.1** (release inicial). Histórico em [CHANGELOG.md](./CHANGELOG.md).
+Estado atual: **rev-0.6** (assinatura Donadão Labs integrada à paleta). Histórico completo em [CHANGELOG.md](./CHANGELOG.md).
 
 ---
 
@@ -99,10 +104,11 @@ Estado atual: **rev-0.1** (release inicial). Histórico em [CHANGELOG.md](./CHAN
 Sistema completo documentado em [`rev-0.1/brand/`](./rev-0.1/brand/).
 
 Princípios não-negociáveis:
-- Cor: `#C8622A` (Cali Copper) — única
-- CALI rotacionado +6°, GARAGE rotacionado -3° (balanço assimétrico)
+- Cor primária: `#DD6520` (burnt copper — override de `#C8622A` aplicado em rev-0.3 por decisão do brand owner; mesma família terracotta, mais vivo em tela)
+- Logo oficial vetorial em `rev-0.1/img/logo.png` (rev-0.4) — recolorível via CSS `mask-image` + `background-color: var(--color-orange)`
 - Fachada pintada à mão = artefato canônico (rev-0.0). Não substituir.
-- Brush = orgânico, tipografia ao redor = geométrica (Anton + Inter)
+- Brush = orgânico, tipografia ao redor = geométrica (Anton + Inter + Inter Tight 700 para a assinatura Donadão Labs)
+- Backgrounds em família warm cocoa (`#15100C` / `#1F1610`) + seções `.section-cream` para alternância (rev-0.2)
 
 ---
 

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cali-garage.vercel.app/sitemap.xml

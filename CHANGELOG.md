@@ -8,6 +8,64 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.7 — Released (2026-05-10)
+
+### Status
+Primeira revisão pós-deploy em produção (https://cali-garage.vercel.app). Aprovada pelo cliente após 7 iterações em sessão (v1→v7). Notas em [`rev-0.7/notes.md`](./rev-0.7/notes.md).
+
+### Iterações dentro da rev (v1 → v7)
+| v | Mudança | Resultado |
+|---|---------|-----------|
+| v1 | Hambúrguer global (direita) + overlay full-screen | ❌ "lado errado, links sumiram, caixa preta feia" |
+| v2 | Hambúrguer à esquerda + drawer slide-in lateral | ❌ "logo abaixo do hambúrguer, drawer ainda sobreposto" |
+| v3 | Flex defensivo + dropdown popover abaixo do botão | ✅ layout OK, mas click nos links não navegava |
+| v4 | Removido `.nav-backdrop` (conflito de stacking context) + click-outside via document + CTA pill + polish em cards | ✅ menu funciona, padronização visual |
+| v5 | Fix contraste contato (h4/p herdavam cor escura de `.section-cream`, invisíveis sobre warm dark) — labels viraram laranja, valores cream forte | ✅ contatos legíveis |
+| v6 | Mapa contido no quadro cream (`height: 460px` fixo + `overflow: hidden` na seção) | ✅ overflow corrigido |
+| v7 | Status "Aberto/Fechado agora" dinâmico (timezone America/Sao_Paulo, seg-sex 8-18h, exceto feriados nacionais com cálculo de Páscoa/Carnaval/Corpus Christi) | ✅ aprovado |
+
+### Trigger
+Após go-live na rev-0.6, cliente identificou dois pontos de atrito visual:
+1. Navbar com 6 links + CTA poluindo o header em desktop
+2. Cards de stats (4,7★ / 15+ / 100%) na seção About do index — fundo warm dark `#1F1610` sobre seção cream criava "tijolos pretos" isolados, lendo como pontos visuais sem hierarquia
+
+### Iteração visual durante a rev (v1 → v2)
+**v1 (descartada):** hambúrguer global à direita + overlay full-screen escuro com itens grandes. Cliente reagiu: hambúrguer no lado errado, links sumiram do desktop, overlay aparecia como caixa preta sólida cortando metade da tela.
+
+**v2 (entregue):** três correções específicas conforme feedback:
+- Hambúrguer reposicionado para a **esquerda** (antes do logo, dentro de novo wrapper `.navbar-start`)
+- **Links inline mantidos visíveis** no desktop — drawer é adição, não substituto
+- Overlay trocado por **drawer slide-in da esquerda** (largura `min(360px, 88vw)`) com gradiente vertical translúcido `rgba(31,22,16,0.92) → rgba(21,16,12,0.96)` + `backdrop-filter: blur(28px) saturate(1.15)`. Backdrop separado abafa o restante com gradiente diagonal `rgba(21,16,12,0.35→0.65)` + blur 6px
+
+### Mudanças
+
+**1. Header — hambúrguer à esquerda + drawer translúcido**
+- HTML: novo wrapper `.navbar-start` agrupando `.nav-toggle` + `.logo` à esquerda; `.nav-menu` no centro/direita; `.nav-cta` no fim. `.nav-backdrop` adicionado fora do header em todas as 6 páginas
+- Desktop: links inline mantidos como antes (`.nav-menu` com `display: flex`)
+- Mobile (≤900px): links inline escondidos via `.nav-menu:not(.is-open) { display: none }`
+- Drawer (`.nav-menu.is-open`): slide-in da esquerda em 0.32s, scrollável, items em Anton uppercase com border-left animado no hover
+- Hambúrguer animado: 3 linhas → X ao abrir
+- JS atualizado: ESC fecha, click no backdrop fecha, click em link fecha, scroll do body bloqueado quando aberto
+
+**2. Stats — gradiente cream→peach**
+- `.section-cream .stat` e `.section-cream .stat-item` saem de `background-color: var(--color-card)` (warm dark) para `linear-gradient(180deg, #FBF6EC 0%, #FFC79A 100%)`
+- Border `rgba(221, 101, 32, 0.18)` e box-shadow laranja sutil
+- `.stat-number` agora `var(--color-orange-dark)` `#B04A18` (contraste WCAG AA pass sobre o gradiente claro)
+- `.stat-label` em dark warm `#1F1610` opacity 0.78
+- Cards `.feature-card`/`.service-card` em `.section-cream` mantidos como antes (warm dark) — só os stats cards mudaram para o gradiente claro
+
+### Files modificados
+- `rev-0.1/index.html`, `rev-0.1/sobre.html`, `rev-0.1/servicos.html`, `rev-0.1/galeria.html`, `rev-0.1/avaliacoes.html`, `rev-0.1/contato.html` — `.nav-cta` reposicionado para fora de `.nav-menu`
+- `rev-0.1/css/style.css` — bloco `.nav-toggle`/`.nav-menu` reescrito (overlay full-screen) + bloco gradiente nos stats + ajustes de contraste
+
+### Acceptance criteria
+- ✅ CSS balanceado (254 abre / 254 fecha)
+- ✅ Deploy production OK
+- ✅ Headers de segurança preservados
+- ⏳ Validação visual mobile + desktop (cliente)
+
+---
+
 ## rev-0.6 — Released (2026-05-07)
 
 ### Trigger

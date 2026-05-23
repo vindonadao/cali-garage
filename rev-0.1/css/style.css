@@ -154,13 +154,16 @@ p { color: var(--color-text-muted); }
 
 .navbar {
   pointer-events: auto;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: nowrap;
   gap: 1rem;
   width: 100%;
   max-width: 980px;
-  padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
   background-color: rgba(26, 20, 16, 0.82);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -233,25 +236,64 @@ p { color: var(--color-text-muted); }
   color: var(--color-orange);
 }
 
+/* ============================================
+   NAVBAR LAYOUT (rev-0.7 v2)
+   Hambúmburger SEMPRE à esquerda, antes do logo.
+   Links inline visíveis em desktop (mantém descoberta).
+   Menu abre como drawer slide-in da esquerda com
+   gradiente translúcido (não caixa preta sólida).
+   ============================================ */
+.navbar-start {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-right: auto;
+  min-width: 0;
+}
+.navbar-start .nav-toggle { flex-shrink: 0; }
+.navbar-start .logo { flex-shrink: 1; min-width: 0; }
+.nav-cta { flex-shrink: 0; }
+
 .nav-toggle {
-  display: none;
-  width: 40px;
-  height: 40px;
+  display: flex;
+  width: 42px;
+  height: 42px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 5px;
   border-radius: var(--radius-pill);
   background-color: var(--color-card-2);
+  border: 1px solid var(--color-border);
+  position: relative;
+  z-index: 1100;
+  transition: background-color var(--t), border-color var(--t);
 }
-.nav-toggle span { width: 18px; height: 2px; background-color: var(--color-text); }
+.nav-toggle:hover { background-color: var(--color-card); border-color: var(--color-orange); }
+.nav-toggle span {
+  width: 18px;
+  height: 2px;
+  background-color: var(--color-text);
+  transition: transform var(--t), opacity var(--t);
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
 
+/* Estado padrão DESKTOP: links inline no header */
 .nav-menu {
   display: flex;
   align-items: center;
   gap: 0.25rem;
 }
-
 .nav-menu a {
   font-size: 0.87rem;
   font-weight: 500;
@@ -260,9 +302,60 @@ p { color: var(--color-text-muted); }
   border-radius: var(--radius-pill);
   transition: color var(--t), background-color var(--t);
 }
-
 .nav-menu a:hover { color: var(--color-text); background-color: var(--color-card-2); }
 .nav-menu a.active { color: var(--color-text); background-color: var(--color-card-2); }
+
+/* Estado DROPDOWN (quando hambúrguer abre — popover compacto abaixo do botão).
+   Não cobre o site inteiro. Não usa backdrop. Sai do canto esquerdo da .navbar
+   e fica logo abaixo dela. */
+.nav-menu.is-open {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: min(280px, calc(100vw - 2rem));
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0.15rem;
+  padding: 0.6rem;
+  background-color: rgba(26, 20, 16, 0.96);
+  backdrop-filter: blur(24px) saturate(1.1);
+  -webkit-backdrop-filter: blur(24px) saturate(1.1);
+  border: 1px solid rgba(221, 101, 32, 0.22);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  z-index: 1050;
+  transform-origin: top left;
+  animation: dropdownIn 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.nav-menu.is-open a {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text);
+  padding: 0.7rem 0.95rem;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  border-left: 3px solid transparent;
+  transition: color var(--t), border-color var(--t), background-color var(--t);
+}
+.nav-menu.is-open a:hover {
+  color: var(--color-orange);
+  border-left-color: var(--color-orange);
+  background-color: rgba(221, 101, 32, 0.08);
+}
+.nav-menu.is-open a.active {
+  color: var(--color-orange);
+  border-left-color: var(--color-orange);
+  background-color: rgba(221, 101, 32, 0.10);
+}
+
+@keyframes dropdownIn {
+  from { transform: translateY(-8px) scale(0.98); opacity: 0; }
+  to   { transform: translateY(0)     scale(1);    opacity: 1; }
+}
+
+/* (rev-0.7 v3) Backdrop removido — click-outside agora via JS document listener,
+   evitando conflito de stacking context com o .site-header (z-index: 100). */
 
 .nav-cta {
   background-color: var(--color-orange) !important;
@@ -270,10 +363,13 @@ p { color: var(--color-text-muted); }
   padding: 0.65rem 1.15rem !important;
   font-weight: 600 !important;
   font-size: 0.85rem !important;
+  border-radius: var(--radius-pill) !important;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  transition: transform var(--t), background-color var(--t) !important;
+  white-space: nowrap;
+  transition: transform var(--t), background-color var(--t), box-shadow var(--t) !important;
+  box-shadow: 0 4px 14px rgba(221, 101, 32, 0.28);
 }
 .nav-cta:hover {
   background-color: var(--color-orange-light) !important;
@@ -487,9 +583,21 @@ p { color: var(--color-text-muted); }
   width: 8px; height: 8px; border-radius: 50%;
   background-color: #25D366;
   box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.22);
+  transition: background-color var(--t), box-shadow var(--t);
 }
 .billboard-corner small { color: var(--color-text-muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; }
 .billboard-corner span { font-weight: 600; font-size: 0.95rem; }
+
+/* Status dinâmico (rev-0.7 v6): aberto verde / fechado vermelho.
+   Calculado em JS baseado em horário America/Sao_Paulo + feriados nacionais. */
+.billboard-corner.status-closed .dot {
+  background-color: #E5484D;
+  box-shadow: 0 0 0 4px rgba(229, 72, 77, 0.22);
+}
+.billboard-corner.status-open .dot {
+  background-color: #25D366;
+  box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.22);
+}
 
 /* ---------- STATS STRIP ---------- */
 .stats-strip {
@@ -600,11 +708,12 @@ p { color: var(--color-text-muted); }
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 2rem;
-  transition: transform var(--t), border-color var(--t), background-color var(--t);
+  transition: transform var(--t), border-color var(--t), background-color var(--t), box-shadow var(--t);
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 }
 
 .service-card::before,
@@ -621,8 +730,9 @@ p { color: var(--color-text-muted); }
 
 .service-card:hover,
 .feature-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   border-color: var(--color-orange);
+  box-shadow: 0 12px 32px rgba(221, 101, 32, 0.18);
   background-color: var(--color-surface-2);
 }
 
@@ -634,7 +744,8 @@ p { color: var(--color-text-muted); }
   justify-content: center;
   background-color: var(--color-orange-soft);
   color: var(--color-orange);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 14px rgba(221, 101, 32, 0.16);
   font-size: 1.6rem;
   margin-bottom: 0.4rem;
 }
@@ -846,7 +957,8 @@ p { color: var(--color-text-muted); }
   transition: transform var(--t), border-color var(--t);
 }
 
-.review-card:hover { transform: translateY(-3px); border-color: var(--color-orange); }
+.review-card { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); transition: transform var(--t), border-color var(--t), box-shadow var(--t); }
+.review-card:hover { transform: translateY(-4px); border-color: var(--color-orange); box-shadow: 0 12px 32px rgba(221, 101, 32, 0.18); }
 
 .review-header {
   display: flex;
@@ -886,7 +998,9 @@ p { color: var(--color-text-muted); }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
+  align-items: start;
 }
+.contact-grid > * { min-width: 0; }
 
 .contact-info-list {
   display: flex;
@@ -903,34 +1017,55 @@ p { color: var(--color-text-muted); }
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  transition: border-color var(--t), background-color var(--t);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: border-color var(--t), background-color var(--t), transform var(--t), box-shadow var(--t);
 }
 
-.contact-item:hover { border-color: var(--color-orange); background-color: var(--color-surface-2); }
+.contact-item:hover {
+  border-color: var(--color-orange);
+  background-color: var(--color-surface-2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(221, 101, 32, 0.18);
+}
 
 .contact-item .feature-icon { flex-shrink: 0; width: 48px; height: 48px; font-size: 1.3rem; }
 .contact-item h4 {
   font-family: var(--font-body);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--color-text-muted);
-  font-weight: 500;
-  margin-bottom: 0.2rem;
+  color: var(--color-orange);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
 }
 .contact-item p,
-.contact-item a { font-size: 1.02rem; color: var(--color-text); font-weight: 500; line-height: 1.4; }
+.contact-item a,
+.contact-item address {
+  font-size: 1.06rem;
+  color: var(--color-text);
+  font-weight: 500;
+  line-height: 1.45;
+  font-style: normal;
+}
 .contact-item a:hover { color: var(--color-orange); }
 
 .map-wrap {
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--color-border);
-  height: 100%;
-  min-height: 460px;
+  width: 100%;
+  max-width: 100%;
+  height: 460px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
 }
 
-.map-wrap iframe { width: 100%; height: 100%; min-height: 460px; border: 0; display: block; }
+.map-wrap iframe {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  border: 0;
+  display: block;
+}
 
 /* ---------- CTA STRIP (big rounded card) ---------- */
 .cta-strip {
@@ -1104,29 +1239,17 @@ p { color: var(--color-text-muted); }
   .section-head .meta { text-align: left; }
 }
 
+@media (max-width: 900px) {
+  /* Mobile: esconder links inline; só hambúrguer + logo + CTA visíveis no header.
+     Quando o drawer abrir (.is-open), o display vira flex via override mais específico. */
+  .nav-menu:not(.is-open) { display: none; }
+}
+
 @media (max-width: 720px) {
-  .nav-toggle { display: flex; }
-  .navbar { padding: 0.45rem 0.5rem 0.45rem 1rem; }
-  .nav-menu {
-    position: fixed;
-    top: 5rem;
-    left: 1rem;
-    right: 1rem;
-    background-color: rgba(20,20,20,0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.25rem;
-    padding: 0.75rem;
-    transform: translateY(-12px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--t), transform var(--t);
-  }
-  .nav-menu.is-open { opacity: 1; transform: translateY(0); pointer-events: auto; }
-  .nav-menu a { padding: 0.85rem 1rem; }
+  .navbar { padding: 0.45rem 0.5rem 0.45rem 0.75rem; }
+  .nav-cta { padding: 0.55rem 0.95rem !important; font-size: 0.78rem !important; }
+  .navbar-start { gap: 0.4rem; }
+  .logo .cg-logo-img { height: 32px; }
 
   .section { padding: 4rem 0; }
   .hero { padding: 7rem 0 3rem; }
@@ -1250,6 +1373,7 @@ p { color: var(--color-text-muted); }
   color: var(--color-text-on-cream);
   position: relative;
   z-index: 2;
+  overflow: hidden;
 }
 .section-cream h1,
 .section-cream h2,
@@ -1280,11 +1404,25 @@ p { color: var(--color-text-muted); }
 .section-cream .feature-card,
 .section-cream .service-card,
 .section-cream .review-card,
-.section-cream .stat,
-.section-cream .stat-item {
+.section-cream .contact-item {
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
   color: var(--color-text);
+}
+
+/* ============================================
+   STATS COM GRADIENTE (rev-0.7)
+   Cards das stats em seções cream agora usam
+   gradiente vertical creme→pêssego em vez do
+   bloco warm-dark, que ficava como "tijolo preto".
+   Cliente: "tinha que ser um degradê, branco→alaranjado".
+   ============================================ */
+.section-cream .stat,
+.section-cream .stat-item {
+  background: linear-gradient(180deg, #FBF6EC 0%, #FFC79A 100%);
+  border: 1px solid rgba(221, 101, 32, 0.18);
+  color: #1F1610;
+  box-shadow: 0 6px 18px rgba(221, 101, 32, 0.10);
 }
 .section-cream .feature-card h3,
 .section-cream .service-card h3,
@@ -1296,6 +1434,24 @@ p { color: var(--color-text-muted); }
 .section-cream .review-card p,
 .section-cream .review-text {
   color: var(--color-text-muted);
+}
+
+/* (rev-0.7 v5) FIX contraste contato:
+   .contact-item dentro de .section-cream tinha h4/p herdando
+   cor escura da seção cream — invisíveis sobre fundo warm dark.
+   Override: h4 em laranja (label tag), p/a/address em cream forte. */
+.section-cream .contact-item h4 {
+  color: var(--color-orange);
+}
+.section-cream .contact-item p,
+.section-cream .contact-item a,
+.section-cream .contact-item address {
+  color: var(--color-text);
+}
+.section-cream .contact-item a:hover { color: var(--color-orange-light); }
+.section-cream .contact-item .contact-item-sub {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
 }
 .section-cream .service-card ul li {
   background-color: var(--color-card-2);
@@ -1310,10 +1466,20 @@ p { color: var(--color-text-muted); }
 .section-cream .stat-number .accent {
   color: var(--color-orange);
 }
-/* IMPORTANTE: stat-label aqui está DENTRO de cards warm dark (.stat / .stat-item)
-   então usa cream-text (light) e não muted-on-cream (dark) — fix rev-0.3 */
+/* rev-0.7: cards .stat/.stat-item agora têm gradiente claro
+   (creme→pêssego) — texto precisa ser ESCURO para contraste.
+   Cards .feature-card/.service-card seguem warm dark com texto cream. */
+.section-cream .stat .stat-number,
+.section-cream .stat-item .stat-number,
+.section-cream .stat .stat-number .accent,
+.section-cream .stat-item .stat-number .accent {
+  color: var(--color-orange-dark);
+}
 .section-cream .stat .stat-label,
-.section-cream .stat-item .stat-label,
+.section-cream .stat-item .stat-label {
+  color: #1F1610;
+  opacity: 0.78;
+}
 .section-cream .feature-card .stat-label,
 .section-cream .service-card .stat-label {
   color: var(--color-text);
