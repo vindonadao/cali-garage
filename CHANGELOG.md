@@ -8,6 +8,70 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9 — Released (2026-05-23)
+
+### Foco
+Onda 1 da auditoria Cowork (2026-05-23). Resolve os 2 itens 🟠 Alto não-tracking, 3 dos 4 🟡 Médio e 1 dos 2 ⚪ Baixo. GA4/Consent Mode ficam pra rev-0.10. Notas em [`rev-0.9/notes.md`](./rev-0.9/notes.md).
+
+### Origem
+Auditoria de landing page Cowork realizada em https://caligarage.donadaolabs.com/ (Vinicius Donadão, Donadão Labs). Veredito geral: tecnicamente sólida, sem bloqueador crítico — itens são correções de SEO/social/LGPD.
+
+### Mudanças
+
+**1. JSON-LD `AutoRepair` — domínio canônico** (🟠 Alto)
+- `cali-garage.vercel.app` → `caligarage.donadaolabs.com` em 3 campos: `@id`, `url`, `image`
+- `image` agora aponta pra `og-cover.jpg` (gerada nesta rev) — não mais pra `fachada.jpg` inexistente
+- Novo campo `sameAs` com placeholder `GOOGLE_BUSINESS_PROFILE_URL` (TODO: preencher quando o cliente passar a URL do Google Business Profile)
+
+**2. Open Graph + Twitter Cards + canonical em todas as 7 páginas** (🟡 Médio)
+- Site é divulgado por WhatsApp → preview sem imagem era atrito de conversão
+- Adicionado em index, sobre, servicos, galeria, avaliacoes, contato + nova privacidade: `og:url`, `og:image`, `og:image:width=1200`, `og:image:height=630`, `og:image:alt`, `og:image:type`, `twitter:card=summary_large_image`, `<link rel="canonical">`
+- Páginas internas também ganharam `og:site_name` e `og:locale` (só o index tinha)
+
+**3. Página de Política de Privacidade LGPD** (🟡 Médio — pré-requisito pra rev-0.10)
+- `rev-0.1/privacidade.html` novo — 11 seções cobrindo: controlador, dados não coletados, logs técnicos, cookies (atualmente nenhum), dados via WhatsApp/telefone, compartilhamento, retenção, direitos do titular (art. 18 LGPD), segurança, encarregado/DPO, atualizações, lei aplicável
+- Placeholders explícitos para o cliente preencher: `[PREENCHER]` no CNPJ, `[A definir]` no DPO
+- Link "Política de Privacidade" no `.footer-bottom` de todas as 7 páginas
+- `/privacidade.html` adicionado ao sitemap (changefreq=yearly, priority=0.3)
+
+**4. og-cover.jpg gerada** (1200×630, 64KB JPEG)
+- Composta via PIL: warm cocoa background (#1F1610) + logo recolorido em laranja (#DD6520) via alpha mask + texto "OFICINA MECÂNICA · SANTOS/SP" em cream + subtitle "★ 4,7 no Google · Reparos honestos para o seu carro"
+- `rev-0.1/img/og-cover.jpg` novo
+
+**5. Sitemap.xml** alinhado
+- `cali-garage.vercel.app` → `caligarage.donadaolabs.com` em todas as URLs
+- Paths `/sobre` → `/sobre.html` (e demais) — antes era inconsistente com os arquivos reais
+- Adicionado `/privacidade.html`
+
+**6. Tap targets ≥44px no mobile** (⚪ Baixo, WCAG 2.5.5)
+- `.footer-col ul li a`, `.footer-col address a`, `.footer-bottom a`, `.section-head .meta a` com `min-height: 44px` + `line-height: 44px` em viewports ≤900px
+- Auditor mediu ~17-18px nos links do rodapé e no "Ver todas as avaliações"
+
+### Não fechado nesta rev (vai pra rev-0.10)
+- 🟠 Alto: instalar GA4 + event tracking nos CTAs WhatsApp/Telefone/Agendar
+- 🟡 Médio: banner LGPD com Consent Mode v2 (deny-all default)
+- Pré-requisito da rev-0.10 já está pronto: /privacidade.html publicada
+
+### Não fechado nesta rev (backlog ⚪ Baixo)
+- CSP nonce/hash → remover `'unsafe-inline'` de `script-src` (item de endurecimento, não urgente)
+
+### TODOs pro cliente
+- Passar URL do Google Business Profile pra preencher `sameAs` no JSON-LD
+- Preencher CNPJ na seção 1 de `/privacidade.html`
+- Confirmar designação (ou ausência) de DPO na seção 9 de `/privacidade.html`
+
+### Files modificados
+- `rev-0.1/index.html` — JSON-LD domain + sameAs + OG completo + canonical + link privacidade
+- `rev-0.1/{sobre,servicos,galeria,avaliacoes,contato}.html` — OG completo + canonical + link privacidade + og:site_name + og:locale
+- `rev-0.1/privacidade.html` (novo)
+- `rev-0.1/img/og-cover.jpg` (novo, 1200×630, 64KB)
+- `rev-0.1/sitemap.xml` — domain fix + paths .html + privacidade
+- `rev-0.1/css/style.css` — bloco mobile tap-targets (≤900px media query)
+- `rev-0.9/notes.md` (novo)
+- `CHANGELOG.md` — esta entrada
+
+---
+
 ## rev-0.8 — Released (2026-05-10)
 
 ### Foco
