@@ -8,6 +8,28 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.1 — Released (2026-05-23)
+
+### Foco
+Substituir o placeholder `GOOGLE_BUSINESS_PROFILE_URL` deixado na rev-0.9 pela URL real do perfil do Google Maps da Cali Garage, fornecida pelo cliente, e aproveitar as coordenadas precisas que vieram junto.
+
+### Mudanças
+- **JSON-LD `sameAs`**: placeholder substituído pela URL canônica do perfil Google Maps (tracking params removidos)
+- **JSON-LD `geo.latitude/longitude`**: `-23.9532, -46.3326` → `-23.943392, -46.3223533` (coords oficiais do perfil Google — ~1km de diferença do valor anterior, que era geocode aproximado da criação inicial)
+- **Meta `geo.position` e `ICBM`** em `index.html` e `contato.html`: idem
+
+### Files modificados
+- `rev-0.1/index.html` — JSON-LD sameAs + geo coords + meta geo
+- `rev-0.1/contato.html` — meta geo
+- `CHANGELOG.md` — esta entrada
+
+### TODOs remanescentes pro cliente (não bloqueantes)
+- CNPJ pra preencher na seção 1 de `/privacidade.html`
+- Decisão sobre DPO/Encarregado na seção 9 de `/privacidade.html`
+- Foto real da fachada (opcional, pra substituir og-cover.jpg gerada)
+
+---
+
 ## rev-0.9 — Released (2026-05-23)
 
 ### Foco
