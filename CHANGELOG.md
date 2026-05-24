@@ -8,6 +8,29 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.3 — Released (2026-05-23)
+
+### Foco
+Designar o Encarregado/Ponto de contato LGPD na Política de Privacidade. Cliente optou por se indicar como ponto de contato (permitido pra ME/EPP por força da Resolução CD/ANPD nº 2/2022, que dispensa designação formal de DPO).
+
+### Mudanças
+- **`/privacidade.html` seção 9 (Encarregado/DPO)**: placeholder `[A definir]` substituído por bloco com nome + contato:
+  - Nome: Fabrício Augusto Silva Nunes
+  - WhatsApp: +55 13 99625-2628 (mesmo número de atendimento)
+- Contexto regulatório incluído no texto (Resolução CD/ANPD nº 2/2022 que dispensa DPO formal pra ME/EPP)
+
+### Files modificados
+- `rev-0.1/privacidade.html`
+- `CHANGELOG.md` — esta entrada
+
+### Onda 1 da auditoria Cowork — FECHADA 100%
+Com esta rev, todos os itens não-tracking da auditoria Cowork (2026-05-23) estão fechados. Falta só a Onda 2 (GA4 + Consent Mode v2 — vai pra rev-0.10) e o backlog ⚪ baixo (CSP nonce/hash).
+
+### TODOs remanescentes (opcionais, não bloqueantes)
+- Foto real da fachada (pra substituir og-cover.jpg gerada via PIL)
+
+---
+
 ## rev-0.9.2 — Released (2026-05-23)
 
 ### Foco
