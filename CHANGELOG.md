@@ -8,6 +8,24 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.2 — Released (2026-05-23)
+
+### Foco
+Substituir o placeholder `[PREENCHER]` do CNPJ na Política de Privacidade pelo CNPJ real fornecido pelo cliente.
+
+### Mudanças
+- **`/privacidade.html` seção 1 (Controlador dos dados)**: `CNPJ: [PREENCHER]` → `CNPJ: 49.311.687/0001-75` (formato canônico brasileiro)
+
+### Files modificados
+- `rev-0.1/privacidade.html`
+- `CHANGELOG.md` — esta entrada
+
+### TODOs remanescentes pro cliente
+- Decisão sobre DPO/Encarregado na seção 9 de `/privacidade.html` (placeholder `[A definir]`)
+- Foto real da fachada (opcional, pra substituir og-cover.jpg gerada)
+
+---
+
 ## rev-0.9.1 — Released (2026-05-23)
 
 ### Foco
