@@ -8,6 +8,35 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.4 — Released (2026-06-04)
+
+### Foco
+Refinamento da auditoria externa de 2026-06-04. O guia de correções recebido foi confrontado item a item com o código real e com a resposta de produção (`curl`). Resultado: dos 6 achados, apenas 1 era ação imediata válida — os demais não procediam (HSTS, GrowthBook, Instagram) ou já estavam resolvidos (tap targets). Ver `AUDIT-2026-06-04.md`.
+
+### Mudanças
+- **`robots.txt`**: linha `Sitemap:` realinhada de `https://cali-garage.vercel.app/sitemap.xml` (staging) para `https://caligarage.donadaolabs.com/sitemap.xml` (domínio canônico). Bug residual da rev-0.9, que corrigiu o `sitemap.xml` mas deixou o `robots.txt` apontando para staging.
+- **`AUDIT-2026-06-04.md`** (novo): auditoria refinada com veredito por achado, falsos positivos registrados e backlog depurado.
+
+### Falsos positivos da auditoria 2026-06-04 (registrados, não reabrir)
+- **HSTS** — presente no `vercel.json` e confirmado no ar via `curl`.
+- **GrowthBook** — não existe no projeto.
+- **Instagram do rodapé** — é a assinatura da agência (bloco `ddl-built-full`), não link social do cliente; oficina não tem perfil.
+- **Tap targets** — já em 44px desde a rev-0.9.
+
+### Files modificados
+- `rev-0.1/robots.txt`
+- `AUDIT-2026-06-04.md` — novo
+- `CHANGELOG.md` — esta entrada
+
+### Pendente para rev-0.10 (Onda 2 — depende do cliente)
+- GA4 + evento `generate_lead` no WhatsApp + Consent Mode v2 + banner LGPD. **GA4 só sobe quando o cliente tiver o domínio próprio no ar** — não no subdomínio da agência (aguarda domínio + Measurement ID)
+- CSP: remover `'unsafe-inline'` de `script-src` via hash SHA-256 do JSON-LD (polimento)
+
+### Pós-deploy
+- Reenviar o sitemap no Google Search Console.
+
+---
+
 ## rev-0.9.3 — Released (2026-05-23)
 
 ### Foco
