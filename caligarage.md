@@ -53,8 +53,8 @@ Nome:      Cali Garage Reparos Automotivos
 Endereço:  Av. Campos Sales, 98 - Vila Matias, Santos - SP, CEP 11013-401
 Telefone:  +55 13 3222-3456
 WhatsApp:  +55 13 99625-2628
-Horário:   Segunda a Sexta — 08:00 às 18:00
-           Sábado e Domingo — Fechado
+Horário:   Segunda a Sexta · 7h30 às 12h e 14h às 18h
+           Sábado e Domingo · Fechado
 Avaliação: 4,7 ⭐ no Google (15 opiniões)
 ```
 

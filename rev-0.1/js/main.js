@@ -43,7 +43,8 @@
 
   // ============================================
   // BUSINESS STATUS (rev-0.7 v6)
-  // Aberto seg–sex 08h–18h, horário America/Sao_Paulo.
+  // Aberto seg a sex, 7h30 às 12h e 14h às 18h (horário America/Sao_Paulo).
+  // Fecha para o almoço entre 12h e 14h.
   // Fechado em sábado, domingo e feriados nacionais.
   // Feriados móveis (Páscoa, Carnaval, Sexta Santa, Corpus Christi)
   // calculados via algoritmo Anonymous Gregorian Computus.
@@ -115,23 +116,38 @@
     };
   }
 
-  function isOpen(t) {
-    if (t.weekday === 'Sat' || t.weekday === 'Sun') return false;
+  // Janelas em minutos desde a meia-noite: manhã 7h30–12h, tarde 14h–18h.
+  var MANHA_INICIO = 7 * 60 + 30;
+  var MANHA_FIM = 12 * 60;
+  var TARDE_INICIO = 14 * 60;
+  var TARDE_FIM = 18 * 60;
+
+  // 'aberto' | 'almoco' | 'fechado'
+  function businessState(t) {
+    if (t.weekday === 'Sat' || t.weekday === 'Sun') return 'fechado';
     var hols = holidaysBR(t.year);
-    if (hols[key(t.month, t.day)]) return false;
-    if (t.hour < 8 || t.hour >= 18) return false;
-    return true;
+    if (hols[key(t.month, t.day)]) return 'fechado';
+
+    var min = t.hour * 60 + t.minute;
+    if (min >= MANHA_INICIO && min < MANHA_FIM) return 'aberto';
+    if (min >= TARDE_INICIO && min < TARDE_FIM) return 'aberto';
+    if (min >= MANHA_FIM && min < TARDE_INICIO) return 'almoco';
+    return 'fechado';
   }
 
   function updateStatus() {
     var el = document.getElementById('biz-status');
     if (!el) return;
-    var t = getBrazilNow();
-    var open = isOpen(t);
-    el.classList.toggle('status-open', open);
-    el.classList.toggle('status-closed', !open);
+    var estado = businessState(getBrazilNow());
+    var aberto = estado === 'aberto';
+    el.classList.toggle('status-open', aberto);
+    el.classList.toggle('status-closed', !aberto);
     var txt = el.querySelector('.status-text');
-    if (txt) txt.textContent = open ? 'Aberto agora' : 'Fechado agora';
+    if (!txt) return;
+    // No almoço o cliente precisa saber que voltamos hoje, não que fechou o dia.
+    if (estado === 'aberto') txt.textContent = 'Aberto agora';
+    else if (estado === 'almoco') txt.textContent = 'Volta às 14h';
+    else txt.textContent = 'Fechado agora';
   }
 
   updateStatus();

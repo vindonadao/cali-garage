@@ -8,6 +8,28 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.5 — Released (2026-09-01)
+
+### Foco
+Correção do horário de funcionamento. O site publicava **seg a sex, 8h às 18h**; o horário real da oficina, confirmado pelo dono e presente no cabeçalho de todas as ordens de serviço, é **seg a sex, 7h30 às 12h e 14h às 18h**, com fechamento para o almoço.
+
+### Mudanças
+- **Rodapé (7 páginas)**: `Seg a Sex: 08h às 18h` → `Seg a Sex: 7h30 às 12h / e 14h às 18h` em um único item de lista, com quebra interna (dois `<li>` separavam visualmente o que é um horário só).
+- **`contato.html`**: bloco "Horário de atendimento" e `meta description` atualizados.
+- **`index.html`**: `og:description` atualizado.
+- **`index.html` (JSON-LD)**: `openingHoursSpecification` passou de um período (`08:00`–`18:00`) para dois (`07:30`–`12:00` e `14:00`–`18:00`). É o que o Google lê para exibir o horário na busca.
+- **`js/main.js`**: o selo "Aberto agora" do hero considerava uma única janela contínua. Reescrito como `businessState()` com três estados — `aberto`, `almoco`, `fechado`. Entre 12h e 14h o selo passa a dizer **"Volta às 14h"** em vez de "Fechado agora", que faria o visitante achar que a oficina fechou o dia. Feriados e fim de semana seguem como estavam.
+
+### Verificação
+- Lógica testada nos limites: 7h29, 7h30, 11h59, 12h00, 13h59, 14h00, 17h59, 18h00, sábado, domingo e feriado (25/12). Todos os casos passaram.
+- JSON-LD revalidado como JSON e conferido nos dois períodos.
+- Rodapé e bloco de contato conferidos em 1280px e em 390px.
+
+### Pendente de ação externa
+- **Google Business Profile** da oficina: o horário exibido na busca e no Maps vem de lá, não do site. Precisa ser corrigido na conta do cliente — é o que a maioria dos visitantes vê antes de chegar ao site.
+
+---
+
 ## rev-0.9.4 — Released (2026-06-04)
 
 ### Foco
