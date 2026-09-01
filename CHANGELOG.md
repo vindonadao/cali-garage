@@ -25,6 +25,13 @@ Correção do horário de funcionamento. O site publicava **seg a sex, 8h às 18
 - JSON-LD revalidado como JSON e conferido nos dois períodos.
 - Rodapé e bloco de contato conferidos em 1280px e em 390px.
 
+### Também nesta revisão
+- **`.vercelignore`**: a pasta `cali garage ops/` (46 MB de planilhas da oficina, com CPF de 630 pessoas) estava no diretório do projeto e subia junto no deploy por CLI — 656 arquivos enviados contra os 29 do site. Os deployments da Vercel exigem SSO, então o arquivo nunca ficou público, mas não há razão para o dado sair da máquina. Agora `cali garage ops/`, `*.xlsx` e `*.zip` estão bloqueados, e o deploy voltou a enviar 29 arquivos.
+- A pasta foi **movida** para `~/projetos/cali-garage-ops/dados-legado/` (gitignored), que é onde os dados serão importados. O repo do site não guarda mais dado de cliente.
+
+### Publicado
+Deploy em produção pela CLI (`vercel --prod`). Verificado no ar: rodapé, `contato`, `meta description`, `og:description`, JSON-LD com os dois períodos e `js/main.js` com o estado de almoço.
+
 ### Pendente de ação externa
 - **Google Business Profile** da oficina: o horário exibido na busca e no Maps vem de lá, não do site. Precisa ser corrigido na conta do cliente — é o que a maioria dos visitantes vê antes de chegar ao site.
 

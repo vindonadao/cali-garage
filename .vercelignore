@@ -7,3 +7,10 @@ CHANGELOG.md
 README.md
 .DS_Store
 *.log
+
+# LGPD — dados operacionais da oficina (CPF, telefone e endereço de 630 pessoas).
+# Nunca podem subir para a Vercel: a URL do deployment serve a raiz do upload,
+# e ela é publica mesmo com outputDirectory apontando para rev-0.1.
+cali garage ops/
+*.xlsx
+*.zip
