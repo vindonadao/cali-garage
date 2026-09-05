@@ -1,8 +1,10 @@
 # Runbook — Lançamento do domínio `caligarage.com.br`
 
-> **Quando executar:** no dia que o cliente comprar o domínio (provavelmente Registro.br).
-> **Tempo estimado:** 45-60 min de configuração + 24h de propagação DNS + 2-6 semanas pra HSTS preload list.
-> **Pré-requisito:** site já no ar em https://cali-garage.vercel.app (rev-0.7+).
+> **Status (05/09/2026):** o domínio **já foi comprado**. Registrado em 31/08/2026 no Registro.br, ativo até 2028, verificado por RDAP. Continua com os NS automáticos (`a.auto.dns.br`, `b.auto.dns.br`) e **não resolve para nenhum IP**. Falta executar este runbook.
+> **Tempo estimado:** 45-60 min de configuração + até 24h de propagação DNS + 2-6 semanas para a HSTS preload list.
+> **Pré-requisito:** site no ar em https://caligarage.donadaolabs.com (rev-0.9.10).
+> **Acesso ao Registro.br:** o brand owner repassa a credencial do cliente; a configuração de DNS é feita por nós.
+> **Decisão registrada:** ao final da migração o subdomínio `caligarage.donadaolabs.com` é **desligado**, não redirecionado.
 
 ---
 
@@ -158,28 +160,46 @@ E volte na URL https://hstspreload.org/?domain=caligarage.com.br periodicamente 
 
 ---
 
-## Fase 6 — Reverter URLs do código
+## Fase 6 — Trocar as URLs do código
 
-Hoje o site referencia `cali-garage.vercel.app` em 3 arquivos (foi temporário pra rodar sem domínio). Após domínio ativo, reverter.
+Hoje o site referencia `caligarage.donadaolabs.com` em **35 lugares, distribuídos em 10 arquivos**: as 8 páginas HTML (canonical, `og:url`, `og:image`), o `robots.txt` e o `sitemap.xml`.
 
-### 6.1 Substituir em 3 arquivos
+**Executar só depois que o DNS resolver e o SSL estiver ativo.** Trocar antes deixa o site declarando como canônico um domínio que ainda não responde.
+
+### 6.1 Substituir
 ```bash
-cd /Users/donadao/cali-garage/rev-0.1
-sed -i '' 's|cali-garage.vercel.app|caligarage.com.br|g' index.html
-sed -i '' 's|cali-garage.vercel.app|caligarage.com.br|g' robots.txt
-sed -i '' 's|cali-garage.vercel.app|caligarage.com.br|g' sitemap.xml
+cd ~/projetos/cali-garage/rev-0.1
+grep -rl "caligarage.donadaolabs.com" . | xargs sed -i '' 's|caligarage.donadaolabs.com|caligarage.com.br|g'
 ```
 
 ### 6.2 Validar
 ```bash
-grep -rn "cali-garage.vercel.app" /Users/donadao/cali-garage/rev-0.1
+grep -rn "caligarage.donadaolabs.com" ~/projetos/cali-garage/rev-0.1
 # esperado: nenhum resultado
+
+grep -rc "caligarage.com.br" ~/projetos/cali-garage/rev-0.1/*.html
+# esperado: mesma contagem de antes, por arquivo
 ```
 
-### 6.3 Redeploy
+### 6.3 Subir o cache busting dos assets
+O `vercel.json` serve `css` e `js` como `immutable` por um ano. Se `style.css` ou `main.js` mudarem nesta leva, subir o `?v=` nas 8 páginas.
+
+### 6.4 Redeploy
 ```bash
-cd /Users/donadao/cali-garage && vercel --prod --yes
+cd ~/projetos/cali-garage && npx vercel@latest --prod --yes
 ```
+
+---
+
+## Fase 6b — Desligar o subdomínio da agência
+
+Decisão do brand owner: desligar, não redirecionar.
+
+1. Vercel Dashboard → projeto `cali-garage` → Settings → Domains
+2. Remover `caligarage.donadaolabs.com`
+3. Remover o registro DNS correspondente na zona de `donadaolabs.com`
+
+**Fazer por último**, com o domínio novo já servindo o site com SSL válido. Links antigos divulgados por WhatsApp deixam de funcionar a partir daqui.
 
 ---
 
@@ -190,7 +210,7 @@ Indexação oficial e detecção de problemas de SEO.
 1. Acessar https://search.google.com/search-console
 2. Adicionar propriedade: tipo **"Domínio"** (cobre todos subdomínios)
 3. Verificação via TXT no DNS (Google fornece valor)
-4. Após verificado, submeter sitemap: `https://caligarage.com.br/sitemap.xml`
+4. Após verificado, submeter sitemap: `https://caligarage.com.br/sitemap.xml` (as URLs internas já usam o formato limpo, sem `.html`, desde a rev-0.9.10)
 5. Solicitar indexação manual da home
 
 ---
