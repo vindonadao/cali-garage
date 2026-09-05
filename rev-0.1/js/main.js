@@ -161,6 +161,8 @@
   // são canal de contato e de exercício de direitos da LGPD.
   // ============================================
   var DIAS_CURTOS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  var DIAS_EXTENSO = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+  var HORARIO_TXT = 'Atendemos de segunda a sexta, 7h30 às 12h e 14h às 18h.';
 
   function isDiaUtil(weekdayNum, ano, mes, dia) {
     if (weekdayNum === 0 || weekdayNum === 6) return false;
@@ -203,6 +205,38 @@
     return 'Fechado · abre ' + nx.dia + ' às ' + nx.hora;
   }
 
+  // Frase completa da tarja e do tooltip. Usa dia por extenso porque aqui
+  // sobra espaço, ao contrário do rótulo do botão.
+  function bannerLabel(t) {
+    var nx = nextOpening(t);
+    if (!nx) return 'Fechado agora.';
+    if (nx.dia === 'hoje') {
+      return nx.hora === '14h'
+        ? 'Fechado para o almoço. Voltamos às 14h.'
+        : 'Fechado agora. Abrimos hoje às ' + nx.hora + '.';
+    }
+    if (nx.dia === 'amanhã') return 'Fechado agora. Abrimos amanhã às ' + nx.hora + '.';
+    var i = DIAS_CURTOS.indexOf(nx.dia);
+    var dia = i >= 0 ? DIAS_EXTENSO[i] : nx.dia;
+    return 'Fechado agora. Abrimos na ' + dia + ' às ' + nx.hora + '.';
+  }
+
+  function updateClosedBanner(t, aberto) {
+    var b = document.getElementById('closed-banner');
+    if (!b) return;
+    if (aberto) {
+      b.hidden = true;
+      document.body.classList.remove('is-banner-on');
+      document.body.style.removeProperty('--banner-h');
+      return;
+    }
+    b.textContent = bannerLabel(t) + ' ' + HORARIO_TXT;
+    b.hidden = false;
+    document.body.classList.add('is-banner-on');
+    // Mede a altura real: no mobile a frase quebra em duas linhas.
+    document.body.style.setProperty('--banner-h', b.offsetHeight + 'px');
+  }
+
   function updateWhatsappCtas() {
     var ctas = document.querySelectorAll('[data-wa-cta]');
     if (!ctas.length) return;
@@ -228,6 +262,7 @@
         el.removeAttribute('aria-disabled');
         el.removeAttribute('tabindex');
         el.removeAttribute('title');
+        el.setAttribute('title', 'Aberto agora. ' + HORARIO_TXT);
         if (!soIcone) el.textContent = el.getAttribute('data-wa-text');
         if (ariaOriginal) el.setAttribute('aria-label', ariaOriginal);
         else el.removeAttribute('aria-label');
@@ -239,17 +274,31 @@
         el.classList.add('is-closed');
         el.setAttribute('aria-disabled', 'true');
         el.setAttribute('tabindex', '-1');
-        el.setAttribute('title', completo);
-        el.setAttribute('aria-label', 'WhatsApp fora do horário de atendimento. ' + completo + '.');
+        var frase = bannerLabel(t) + ' ' + HORARIO_TXT;
+        el.setAttribute('title', frase);
+        el.setAttribute('aria-label', 'WhatsApp fora do horário de atendimento. ' + frase);
         if (!soIcone) el.textContent = closedLabel(t, curto);
       }
     }
   }
 
   function tick() {
+    var t = getBrazilNow();
+    var aberto = businessState(t) === 'aberto';
     updateStatus();
+    updateClosedBanner(t, aberto);
     updateWhatsappCtas();
   }
+
+  // Rede de segurança: se um clique escapar antes do estado ser aplicado,
+  // ou se algo reintroduzir o href, o link fechado não navega.
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('[data-wa-cta]') : null;
+    if (a && a.classList.contains('is-closed')) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
 
   tick();
   // Re-checa a cada minuto pra refletir transições de horário sem reload

@@ -8,6 +8,51 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.7 — Released (2026-09-05)
+
+### Foco
+O bloqueio de WhatsApp entregue na rev-0.9.6 **não chegou a quem já tinha visitado o site**. Correção do cache, mais o aviso de horário que o bloqueio pedia para funcionar bem.
+
+### 1. Bug: assets em cache eterno sem versão (a causa do bloqueio não funcionar)
+O `vercel.json` serve `css` e `js` com `Cache-Control: public, max-age=31536000, immutable`, e as páginas referenciavam `./css/style.css` e `./js/main.js` sem qualquer versão. Para qualquer visitante que já tivesse aberto o site, o navegador continuou servindo o **JavaScript antigo**, sem o bloqueio, por até um ano. Foi assim que o primeiro teste do brand owner caiu direto no WhatsApp num sábado.
+
+O erro passou pela verificação porque os testes rodam em contexto novo do Playwright, sempre sem cache. Verificação de deploy com cache quente virou item obrigatório.
+
+- As 7 páginas passaram a referenciar `./css/style.css?v=0.9.7` e `./js/main.js?v=0.9.7`.
+- **A partir daqui, toda alteração em `style.css` ou `main.js` exige subir esse `?v=`**, senão a mudança não chega em quem já visitou.
+
+### 2. Tarja de aviso no topo
+Fora do expediente, uma faixa fixa no topo de todas as páginas informa o estado e o horário completo, antes de o visitante tentar clicar em qualquer coisa:
+
+- Sábado: "Fechado agora. Abrimos na terça às 7h30. Atendemos de segunda a sexta, 7h30 às 12h e 14h às 18h."
+- No almoço: "Fechado para o almoço. Voltamos às 14h. …"
+- Véspera de dia útil: "Fechado agora. Abrimos amanhã às 7h30. …"
+
+Usa dia por extenso, porque na tarja sobra espaço, diferente do rótulo do botão. É `role="status"`, nasce `hidden` no HTML e só aparece por JS. O `.site-header` é `position: fixed`, então desce junto: o JS mede a altura real da tarja (no mobile a frase quebra em duas linhas) e grava em `--banner-h`, que empurra o header e o `padding-top` do body.
+
+### 3. Tooltip com o horário nos dois estados
+O `title` dos CTAs de WhatsApp agora sempre traz o horário de funcionamento. Aberto: "Aberto agora. Atendemos de segunda a sexta, 7h30 às 12h e 14h às 18h." Fechado: a mesma frase da tarja. O `aria-label` acompanha.
+
+### 4. Rede de segurança no clique
+Listener em fase de captura no `document` que dá `preventDefault` em `[data-wa-cta].is-closed`. Cobre o clique que chegue antes do estado ser aplicado e o caso de algo reintroduzir o `href`. O bloqueio deixou de depender só da remoção do atributo.
+
+### Decisões
+- Cor do botão fechado: **cinza**, não vermelho. Cinza é o código visual de desabilitado; vermelho seria lido como erro.
+- Tarja escolhida em vez de aviso só junto ao botão: quem entra por `/servicos` ou clica no botão flutuante também precisa da informação.
+
+### Verificação
+- Quatro estados no Chrome real, em 390px e 1280px: aberto, almoço, fechado no fim de semana e fechado à noite. Texto da tarja, deslocamento do header, `padding-top` do body, `title`, presença do `href` e ausência de navegação no clique. Sem erro de console, sem overflow horizontal.
+- As 7 páginas revalidadas com a contagem de CTAs bloqueados.
+- Os 16 casos de fronteira da lógica de horário continuam passando.
+
+### Files modificados
+- `rev-0.1/{index,sobre,servicos,galeria,avaliacoes,contato,privacidade}.html` — tarja + `?v=` nos assets
+- `rev-0.1/js/main.js` — `bannerLabel()`, `updateClosedBanner()`, tooltip, listener de captura
+- `rev-0.1/css/style.css` — `.closed-banner` e o deslocamento do header
+- `CHANGELOG.md` — esta entrada
+
+---
+
 ## rev-0.9.6 — Released (2026-09-05)
 
 ### Foco

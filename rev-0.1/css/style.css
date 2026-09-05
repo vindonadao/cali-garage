@@ -1253,6 +1253,26 @@ p { color: var(--color-text-muted); }
 }
 .nav-cta.is-closed::after,
 .btn-primary.is-closed::after { content: none; }
+
+/* Tarja de oficina fechada (rev-0.9.7). Fica escondida no HTML e só aparece
+   fora do expediente, por js/main.js, que também mede a altura real dela.
+   O .site-header é fixed, então precisa descer junto. */
+.closed-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 101;
+  background-color: var(--color-card-2);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border-strong);
+  text-align: center;
+  padding: 0.6rem 1rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+body.is-banner-on { padding-top: var(--banner-h, 2.6rem); }
+body.is-banner-on .site-header { top: calc(1.25rem + var(--banner-h, 2.6rem)); }
 .whatsapp-float.is-closed svg { fill: var(--color-text-dim); }
 .cta-strip .btn-whatsapp.is-closed,
 .cta-strip .btn-whatsapp.is-closed:hover {
