@@ -2,7 +2,7 @@
 
 Site estático da **Cali Garage Reparos Automotivos**, oficina mecânica em Santos/SP, Vila Matias.
 
-> **4,7★ no Google · 15 opiniões reais · 10+ anos no mesmo endereço**
+> **4,8★ no Google · 18 opiniões reais · 10+ anos no mesmo endereço**
 
 ---
 
@@ -23,12 +23,12 @@ cali-garage/
 ├── CHANGELOG.md               Versionamento por revisões (rev-X.Y)
 ├── caligarage.md              Brief original do projeto (CLAUDE.md)
 ├── rev-0/                     Snapshot imutável da baseline
-├── rev-0.1/                   ← Pasta ativa de trabalho / entregável atual (rev-0.6 vive aqui)
+├── rev-0.1/                   ← Pasta ativa de trabalho / entregável atual (rev-0.9.6 vive aqui)
 │   ├── index.html             Home — hero billboard, features, services teaser, reviews, CTA
 │   ├── sobre.html             Sobre a oficina, princípios, stats
 │   ├── servicos.html          9 serviços detalhados
 │   ├── galeria.html           Placeholders aguardando fotos reais
-│   ├── avaliacoes.html        Resumo Google + 6 reviews
+│   ├── avaliacoes.html        Resumo Google + 10 reviews reais
 │   ├── contato.html           WhatsApp, telefone, mapa, horário
 │   ├── css/
 │   │   └── style.css          Stylesheet único
@@ -95,7 +95,7 @@ Convention global Donadão Labs: tags `rev-X.Y` + CHANGELOG.md em todos os proje
 - **X (major)** — redesign estrutural (visual language ou IA)
 - **Y (minor)** — iteração / refinamento dentro do mesmo redesign
 
-Estado atual: **rev-0.6** (assinatura Donadão Labs integrada à paleta). Histórico completo em [CHANGELOG.md](./CHANGELOG.md).
+Estado atual: **rev-0.9.6** (avaliações reais do Google + CTA de WhatsApp restrito ao horário da oficina). Histórico completo em [CHANGELOG.md](./CHANGELOG.md).
 
 ---
 

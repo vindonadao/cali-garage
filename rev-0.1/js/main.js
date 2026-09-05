@@ -150,7 +150,108 @@
     else txt.textContent = 'Fechado agora';
   }
 
-  updateStatus();
+  // ============================================
+  // CTA DE WHATSAPP FORA DO HORÁRIO (rev-0.9.6)
+  // A oficina não trabalha por agendamento: o WhatsApp só é
+  // atendido durante o expediente. Fora dele os CTAs ficam
+  // inativos e dizem quando a oficina volta a atender, em vez
+  // de mandar o visitante para uma conversa sem resposta.
+  // Marcados com [data-wa-cta]. Os links de referência (número
+  // no rodapé e na Política de Privacidade) ficam sempre ativos:
+  // são canal de contato e de exercício de direitos da LGPD.
+  // ============================================
+  var DIAS_CURTOS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+
+  function isDiaUtil(weekdayNum, ano, mes, dia) {
+    if (weekdayNum === 0 || weekdayNum === 6) return false;
+    return !holidaysBR(ano)[key(mes, dia)];
+  }
+
+  // Quando a oficina volta a atender. { dia: 'hoje'|'amanhã'|'seg'..., hora }
+  function nextOpening(t) {
+    var base = new Date(Date.UTC(t.year, t.month - 1, t.day));
+    var min = t.hour * 60 + t.minute;
+
+    if (isDiaUtil(base.getUTCDay(), t.year, t.month, t.day)) {
+      if (min < MANHA_INICIO) return { dia: 'hoje', hora: '7h30' };
+      if (min >= MANHA_FIM && min < TARDE_INICIO) return { dia: 'hoje', hora: '14h' };
+    }
+
+    for (var i = 1; i <= 30; i++) {
+      var n = new Date(base.getTime() + i * 86400000);
+      var ano = n.getUTCFullYear();
+      var mes = n.getUTCMonth() + 1;
+      var dia = n.getUTCDate();
+      if (!isDiaUtil(n.getUTCDay(), ano, mes, dia)) continue;
+      return { dia: i === 1 ? 'amanhã' : DIAS_CURTOS[n.getUTCDay()], hora: '7h30' };
+    }
+    return null;
+  }
+
+  // curto = rótulo do botão do topo, que não pode quebrar linha no mobile.
+  // O rótulo longo começa pelo estado ('Fechado', 'Almoço') porque um botão
+  // apagado dizendo só 'Abre ter às 7h30' não diz ao visitante o que ele era.
+  function closedLabel(t, curto) {
+    var nx = nextOpening(t);
+    if (!nx) return curto ? 'Fechado' : 'Fechado agora';
+    if (curto) return nx.dia === 'hoje' ? ('Volta ' + nx.hora) : 'Fechado';
+    if (nx.dia === 'hoje') {
+      return nx.hora === '14h'
+        ? 'Almoço · volta às 14h'
+        : 'Fechado · abre às ' + nx.hora;
+    }
+    return 'Fechado · abre ' + nx.dia + ' às ' + nx.hora;
+  }
+
+  function updateWhatsappCtas() {
+    var ctas = document.querySelectorAll('[data-wa-cta]');
+    if (!ctas.length) return;
+    var t = getBrazilNow();
+    var aberto = businessState(t) === 'aberto';
+
+    for (var i = 0; i < ctas.length; i++) {
+      var el = ctas[i];
+
+      // Primeira passada: guarda o estado original do link.
+      if (el.getAttribute('data-wa-href') === null) {
+        el.setAttribute('data-wa-href', el.getAttribute('href') || '');
+        el.setAttribute('data-wa-text', (el.textContent || '').trim());
+        el.setAttribute('data-wa-aria', el.getAttribute('aria-label') || '');
+      }
+
+      var soIcone = el.querySelector('svg') !== null;
+      var ariaOriginal = el.getAttribute('data-wa-aria');
+
+      if (aberto) {
+        el.setAttribute('href', el.getAttribute('data-wa-href'));
+        el.classList.remove('is-closed');
+        el.removeAttribute('aria-disabled');
+        el.removeAttribute('tabindex');
+        el.removeAttribute('title');
+        if (!soIcone) el.textContent = el.getAttribute('data-wa-text');
+        if (ariaOriginal) el.setAttribute('aria-label', ariaOriginal);
+        else el.removeAttribute('aria-label');
+      } else {
+        var completo = closedLabel(t, false);
+        // O botão do topo e o flutuante têm pouco espaço.
+        var curto = el.classList.contains('nav-cta');
+        el.removeAttribute('href');
+        el.classList.add('is-closed');
+        el.setAttribute('aria-disabled', 'true');
+        el.setAttribute('tabindex', '-1');
+        el.setAttribute('title', completo);
+        el.setAttribute('aria-label', 'WhatsApp fora do horário de atendimento. ' + completo + '.');
+        if (!soIcone) el.textContent = closedLabel(t, curto);
+      }
+    }
+  }
+
+  function tick() {
+    updateStatus();
+    updateWhatsappCtas();
+  }
+
+  tick();
   // Re-checa a cada minuto pra refletir transições de horário sem reload
-  setInterval(updateStatus, 60000);
+  setInterval(tick, 60000);
 })();

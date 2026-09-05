@@ -8,6 +8,60 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.6 — Released (2026-09-05)
+
+### Foco
+Dois pedidos do cliente: atualizar a prova social pelo que o Google mostra hoje e tirar do site a linguagem de agendamento, porque a oficina não trabalha com hora marcada. Durante a coleta dos dados do Google apareceu um terceiro problema, mais grave: as avaliações publicadas eram fictícias.
+
+### 1. Avaliações reais no lugar das fictícias
+Os 6 depoimentos de `/avaliacoes` (Rafael M., Juliana S., Carlos A., Mariana P., Paulo R., Fernanda L.) eram placeholder do rascunho inicial e nunca foram substituídos. Nenhum deles existe no perfil do Google. Foram trocados pelas **10 avaliações reais com texto**, da mais recente para a mais antiga, com nome abreviado (primeiro nome + inicial).
+
+Os textos receberam **edição leve** por decisão do brand owner: ortografia e pontuação corrigidas, e cortes de trechos que atrapalhavam a leitura sem acrescentar nada. O caso claro era "Pai Carlinhos, Filho Fabricio 3 Irmã Do Carlinhos Sônia, Estão em Boas Mãos", reduzido a "Estão em boas mãos." Em outro depoimento saiu apenas o "ou qualquer outro enganador", mantendo o "para te livrar de auto center": o argumento fica, o xingamento ao concorrente não. Nenhuma edição inverteu ou inflou o sentido de nenhum depoimento. A nota de rodapé da página passou a dizer "com edição leve de pontuação", para não afirmar citação literal.
+
+Coleta feita em 2026-09-05 no painel de comentários do Google (o perfil do Maps sem login não expõe a lista). Perfil hoje: **4,8 estrelas · 18 avaliações** — eram 4,7 e 15.
+
+- **Nota e contagem** atualizadas nas 7 páginas: rodapé, meta description, `og:description`, `title` de `/avaliacoes`, bloco de resumo, stats de `index` e `sobre`, e o feature card ("Quinze clientes" → "Dezoito clientes").
+- **`index.html` (JSON-LD)**: `aggregateRating` de `4.7`/`15` para `4.8`/`18`. É o campo que o Google lê para exibir a nota na busca.
+- **`index.html` (hero)**: os avatares eram as iniciais dos nomes fictícios (R, J, C, M). Agora são as dos quatro clientes reais mais recentes (A, M, G, K).
+
+Das 18 avaliações, 10 têm texto e entraram no site, 7 são só nota e uma é negativa (1 estrela, há um ano). A negativa não foi publicada, o que é decisão editorial do cliente, mas ela existe e o link "Avalie no Google" no fim da página leva ao perfil onde ela aparece.
+
+### 2. Fim da linguagem de agendamento
+O site não tinha módulo de agendamento, tinha copy de agendamento em 5 pontos:
+
+- `index.html`: botão do topo "Agendar" → "WhatsApp" (padroniza com as outras 6 páginas); CTA do hero "Agendar serviço" → "Chamar no WhatsApp"; texto do bloco final "marque uma avaliação rápida" → "traga o carro para uma avaliação rápida".
+- `avaliacoes.html`: "Marque uma avaliação e venha entender…" → "Traga seu carro e entenda…"; botão "Agendar pelo WhatsApp" → "Chamar no WhatsApp".
+- `sobre.html`: "Passe pra um café ou marque uma avaliação" → "Passe pra um café ou traga o carro pra uma olhada" (também saiu o travessão da frase).
+- Mensagens pré-preenchidas do WhatsApp que diziam "gostaria de agendar um serviço" passaram a "Vim pelo site da Cali Garage".
+
+### 3. CTA de WhatsApp respeita o horário da oficina
+Pedido do cliente: o WhatsApp só deve ser acionável quando a oficina está aberta, com feriado e fim de semana bloqueados. Implementado sobre o `businessState()` que já existia desde a rev-0.9.5, então a pausa do almoço, o fim de semana e os feriados nacionais (incluindo os móveis, calculados a partir da Páscoa) já vinham resolvidos.
+
+- 21 CTAs marcados com `data-wa-cta` nas 7 páginas: botão do topo, botões de corpo e o flutuante.
+- Fora do expediente o link perde o `href`, ganha `is-closed` + `aria-disabled="true"` + `tabindex="-1"` e passa a informar o retorno: **"Fechado · abre ter às 7h30"**, **"Almoço · volta às 14h"**, ou "Fechado" / "Volta 14h" no botão do topo, que tem menos espaço. O flutuante fica cinza, sem o pulso, com `aria-label` explicativo.
+- `nextOpening()` calcula o próximo dia útil pulando fim de semana e feriados em sequência, e diz "amanhã" quando é o dia seguinte.
+- **Fora do bloqueio**: o número no rodapé e na Política de Privacidade continuam sempre ativos. São canal de contato e de exercício de direitos da LGPD, não CTA de conversão.
+- O rótulo longo começa pelo estado ("Fechado ·", "Almoço ·") de propósito: um botão apagado dizendo apenas "Abre ter às 7h30" não diz ao visitante o que ele era.
+- Sem JS, os botões continuam funcionando. A falha é para o lado seguro: melhor uma mensagem fora de hora do que um CTA morto.
+
+### Verificação
+- 16 casos de fronteira da lógica de horário em Node: 7h29, 7h30, 11h59, 12h00, 13h59, 14h00, 17h59, 18h00, sábado, domingo, o encadeamento sáb + dom + feriado de 07/09 (abre só na terça) e a véspera de Natal caindo numa quinta (abre na segunda). Todos passaram.
+- As 7 páginas abertas no Chrome real em 390px e 1280px, nos três estados (aberto, almoço, fechado), sem erro de console. Contagem de CTAs bloqueados conferida página a página.
+- `/avaliacoes` conferida com os 10 cards, sem overflow horizontal em nenhuma das duas larguras.
+
+### Files modificados
+- `rev-0.1/{index,sobre,servicos,galeria,avaliacoes,contato,privacidade}.html`
+- `rev-0.1/js/main.js` — `nextOpening()`, `closedLabel()`, `updateWhatsappCtas()`
+- `rev-0.1/css/style.css` — estado `.is-closed`
+- `CHANGELOG.md` — esta entrada
+
+### Pendente de ação externa (cliente)
+- **Google Business Profile**: o horário de lá continua "Abre seg. às 08:00", errado desde sempre e ainda não corrigido. É o que a maioria das pessoas vê antes de chegar ao site. Pendência aberta desde a rev-0.9.5.
+- **Bairro**: o Google grafa "Vila Mathias" e o site usa "Vila Matias". Vale alinhar os dois, de preferência pela grafia oficial do endereço.
+- **Avaliação negativa** sem resposta pública no perfil. Responder costuma pesar mais para quem lê do que a nota em si.
+
+---
+
 ## rev-0.9.5 — Released (2026-09-01)
 
 ### Foco
