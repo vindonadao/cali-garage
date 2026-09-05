@@ -3,7 +3,16 @@
 > **Status (05/09/2026):** o domínio **já foi comprado**. Registrado em 31/08/2026 no Registro.br, ativo até 2028, verificado por RDAP. Continua com os NS automáticos (`a.auto.dns.br`, `b.auto.dns.br`) e **não resolve para nenhum IP**. Falta executar este runbook.
 > **Tempo estimado:** 45-60 min de configuração + até 24h de propagação DNS + 2-6 semanas para a HSTS preload list.
 > **Pré-requisito:** site no ar em https://caligarage.donadaolabs.com (rev-0.9.10).
-> **Rota escolhida (05/09/2026):** os **nameservers foram apontados para a Vercel** (`ns1.vercel-dns.com` / `ns2.vercel-dns.com`) direto no Registro.br. A zona inteira passa a ser gerenciada na Vercel, por CLI. O domínio segue registrado no nome do cliente; só a operação do DNS é nossa.
+> **Rota escolhida (05/09/2026):** os **nameservers foram apontados para a Vercel** (`ns1.vercel-dns.com` / `ns2.vercel-dns.com`) direto no Registro.br. A zona inteira passa a ser gerenciada na Vercel, por CLI.
+>
+> **Titularidade (corrigido em 05/09/2026):** o site vivia na conta Vercel da Donadão Labs (`vindonadaos-projects`), enquanto o Ops já estava na conta do cliente. Foi migrado: agora o projeto é **`cali-garage-site`, no time `cali-garage`** da conta do cliente (`caligaragerepauto-3832`), junto do `cali-garage-ops`. Nada de infraestrutura fica no nome da Donadão Labs.
+>
+> **Deploy passou a exigir o token do cliente:**
+> ```bash
+> export VERCEL_TOKEN=$(grep '^VERCEL_TOKEN=' ~/projetos/cali-garage-ops/.env.local | cut -d= -f2-)
+> cd ~/projetos/cali-garage
+> npx vercel@latest --prod --yes --token "$VERCEL_TOKEN" --scope cali-garage
+> ```
 > **Decisão registrada:** ao final da migração o subdomínio `caligarage.donadaolabs.com` é **desligado**, não redirecionado.
 
 ---
@@ -11,7 +20,9 @@
 ## Fase 1 — Apontar DNS para a Vercel
 
 ### 1.1 Adicionar domínio no projeto Vercel — FEITO em 05/09/2026
-`caligarage.com.br` e `www.caligarage.com.br` já foram adicionados ao projeto `cali-garage`.
+`caligarage.com.br` e `www.caligarage.com.br` estão no projeto **`cali-garage-site`, na conta do cliente**. Foram removidos da conta da Donadão Labs, porque a Vercel não aceita o mesmo domínio em duas contas.
+
+Os nameservers exigidos são os mesmos (`ns1`/`ns2.vercel-dns.com`), então **não é preciso mexer no Registro.br de novo**: quando propagar, o domínio resolve direto para o projeto na conta do cliente.
 
 ### 1.2 Apontar nameservers no Registro.br — FEITO em 05/09/2026
 Painel do domínio → **Alterar Servidores DNS**:
@@ -33,7 +44,7 @@ dig NS caligarage.com.br +short @8.8.8.8
 dig A caligarage.com.br +short @8.8.8.8
 # esperado: um IP da Vercel
 
-npx vercel@latest domains inspect caligarage.com.br --scope vindonadaos-projects
+npx vercel@latest domains inspect caligarage.com.br --token "$VERCEL_TOKEN" --scope cali-garage
 ```
 
 O SSL (Let's Encrypt) é provisionado sozinho de 5 a 10 minutos depois que os NS propagarem.
@@ -45,9 +56,10 @@ O SSL (Let's Encrypt) é provisionado sozinho de 5 a 10 minutos depois que os NS
 Com a zona na Vercel, os CAA entram por CLI, não pelo Registro.br:
 
 ```bash
-npx vercel@latest dns add caligarage.com.br '@' CAA '0 issue "letsencrypt.org"' --scope vindonadaos-projects
-npx vercel@latest dns add caligarage.com.br '@' CAA '0 issuewild ";"' --scope vindonadaos-projects
-npx vercel@latest dns add caligarage.com.br '@' CAA '0 iodef "mailto:donadao@gmail.com"' --scope vindonadaos-projects
+export VERCEL_TOKEN=$(grep '^VERCEL_TOKEN=' ~/projetos/cali-garage-ops/.env.local | cut -d= -f2-)
+npx vercel@latest dns add caligarage.com.br '@' CAA '0 issue "letsencrypt.org"' --token "$VERCEL_TOKEN" --scope cali-garage
+npx vercel@latest dns add caligarage.com.br '@' CAA '0 issuewild ";"' --token "$VERCEL_TOKEN" --scope cali-garage
+npx vercel@latest dns add caligarage.com.br '@' CAA '0 iodef "mailto:donadao@gmail.com"' --token "$VERCEL_TOKEN" --scope cali-garage
 ```
 
 Validar:
@@ -166,7 +178,8 @@ O `vercel.json` serve `css` e `js` como `immutable` por um ano. Se `style.css` o
 
 ### 6.4 Redeploy
 ```bash
-cd ~/projetos/cali-garage && npx vercel@latest --prod --yes
+export VERCEL_TOKEN=$(grep '^VERCEL_TOKEN=' ~/projetos/cali-garage-ops/.env.local | cut -d= -f2-)
+cd ~/projetos/cali-garage && npx vercel@latest --prod --yes --token "$VERCEL_TOKEN" --scope cali-garage
 ```
 
 ---
@@ -175,9 +188,9 @@ cd ~/projetos/cali-garage && npx vercel@latest --prod --yes
 
 Decisão do brand owner: desligar, não redirecionar.
 
-1. Vercel Dashboard → projeto `cali-garage` → Settings → Domains
-2. Remover `caligarage.donadaolabs.com`
-3. Remover o registro DNS correspondente na zona de `donadaolabs.com`
+1. Na conta da Donadão Labs, remover `caligarage.donadaolabs.com` do projeto `cali-garage`
+2. Remover o registro DNS correspondente na zona de `donadaolabs.com`
+3. **Apagar o projeto `cali-garage` da conta da Donadão Labs**, que fica órfão depois da migração para `cali-garage-site`
 
 **Fazer por último**, com o domínio novo já servindo o site com SSL válido. Links antigos divulgados por WhatsApp deixam de funcionar a partir daqui.
 

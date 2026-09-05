@@ -67,6 +67,16 @@ Acesse `http://localhost:8080` no navegador.
 
 ## Como fazer deploy
 
+> **Titularidade:** o site vive na **conta Vercel do cliente** (time `cali-garage`, projeto `cali-garage-site`), junto do Cali Garage Ops. Nada de infraestrutura fica no nome da Donadão Labs. O deploy usa o token concedido pelo cliente, revogável por ele a qualquer momento.
+
+```bash
+export VERCEL_TOKEN=$(grep '^VERCEL_TOKEN=' ~/projetos/cali-garage-ops/.env.local | cut -d= -f2-)
+cd ~/projetos/cali-garage
+npx vercel@latest --prod --yes --token "$VERCEL_TOKEN" --scope cali-garage
+```
+
+### Outras opções de hospedagem estática
+
 ### Netlify Drop (mais simples)
 
 1. Acesse https://app.netlify.com/drop
