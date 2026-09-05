@@ -8,6 +8,59 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.10 — Released (2026-09-05)
+
+### Foco
+Auditoria ponta a ponta do site pedida pelo brand owner, mais a limpeza dos travessões. Objetivo declarado: que o site não pareça feito por IA nem jogado às pressas.
+
+### 1. Travessões fora da copy
+Travessão no meio da frase é uma das marcas mais reconhecíveis de texto gerado por IA. As 48 ocorrências foram tratadas por categoria:
+
+- **Copy visível**: virou vírgula ou frase reescrita. "Uma oficina nascida para tratar carros — e pessoas — com respeito" virou "Aqui o carro e as pessoas recebem o mesmo respeito". Em `/servicos`, `/sobre` e na Política de Privacidade, os apostos passaram a usar vírgula.
+- **Endereços** nos sete rodapés: "Vila Matias — Santos/SP" virou "Vila Matias, Santos/SP".
+- **Títulos e `og:title`**: o separador virou `|`, que é o padrão de mercado e não denuncia nada. "Contato — Cali Garage" virou "Fale com a Cali Garage".
+- **Atributos de acessibilidade**: `aria-label="Cali Garage — Início"` virou "Cali Garage, início".
+
+Sobraram travessões apenas em comentários de CSS e JS, que ninguém vê.
+
+### 2. Bug de SEO: canonical apontando para URL que redireciona
+O `vercel.json` usa `cleanUrls`, então `/sobre.html` responde **308** para `/sobre`. Só que o `<link rel="canonical">` e o `og:url` de cada página apontavam justamente para a versão `.html`. A página servida em `/sobre` declarava como canônica uma URL que redireciona de volta para ela mesma, e o `sitemap.xml` listava as sete no formato `.html`.
+
+Canonical, `og:url` e sitemap passaram a usar as URLs limpas. Os links internos continuam com `.html` de propósito: é o que mantém o preview local (`python3 -m http.server`) funcionando, e o 308 é permanente e cacheado.
+
+### 3. Página 404 própria
+Antes, um endereço errado caía na tela cinza da Vercel ("The page could not be found"), sem identidade e sem saída. Agora existe `404.html` no visual do site, com quatro caminhos (serviços, avaliações, contato, início), `noindex, follow`, e a mesma tarja de horário das demais páginas.
+
+### 4. "Avalie no Google" leva ao perfil
+O link apontava para uma busca no Google. Agora vai direto ao perfil no Maps, o mesmo do `sameAs` do JSON-LD.
+
+### Auditoria: o que foi verificado
+| Item | Resultado |
+|------|-----------|
+| Links internos | 7 destinos, todos existem |
+| Âncoras `#` | nenhuma quebrada |
+| Links externos | wa.me, Instagram, donadaolabs.com, Maps, perfil do Google: todos 200 |
+| Arquivos | sitemap, robots, og-cover, favicon, logo, css, js: todos 200 |
+| `<a>` sem href ou sem texto | nenhum (com a oficina aberta) |
+| `<img>` sem alt | nenhum, porque **não há `<img>` no site** |
+| Erros de console | nenhum, nas 8 páginas |
+| Recursos 4xx/5xx | nenhum |
+| Hierarquia de headings | exatamente um `h1` por página |
+| JSON-LD | válido, `AutoRepair`, 4.8 · 18, dois períodos de horário |
+| Meta description | presente nas 8 páginas |
+| Overflow horizontal | nenhum, em 390px e 1280px |
+
+### Pendência conhecida
+**Fotos reais da oficina.** A galeria segue com 8 placeholders e o site não tem uma única tag `<img>`. O brand owner informou que as fotos virão depois. Enquanto isso, o `og-cover.jpg` cobre o preview de compartilhamento.
+
+### Files modificados
+- `rev-0.1/*.html` — travessões, canonical, `og:url`, títulos
+- `rev-0.1/404.html` — novo
+- `rev-0.1/sitemap.xml` — URLs limpas e `lastmod`
+- `CHANGELOG.md` — esta entrada
+
+---
+
 ## rev-0.9.9 — Released (2026-09-05)
 
 ### Foco
