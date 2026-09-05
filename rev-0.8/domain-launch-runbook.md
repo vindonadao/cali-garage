@@ -3,7 +3,7 @@
 > **Status (05/09/2026):** o domínio **já foi comprado**. Registrado em 31/08/2026 no Registro.br, ativo até 2028, verificado por RDAP. Continua com os NS automáticos (`a.auto.dns.br`, `b.auto.dns.br`) e **não resolve para nenhum IP**. Falta executar este runbook.
 > **Tempo estimado:** 45-60 min de configuração + até 24h de propagação DNS + 2-6 semanas para a HSTS preload list.
 > **Pré-requisito:** site no ar em https://caligarage.donadaolabs.com (rev-0.9.10).
-> **Acesso ao Registro.br:** o brand owner repassa a credencial do cliente; a configuração de DNS é feita por nós.
+> **Rota escolhida (05/09/2026):** os **nameservers foram apontados para a Vercel** (`ns1.vercel-dns.com` / `ns2.vercel-dns.com`) direto no Registro.br. A zona inteira passa a ser gerenciada na Vercel, por CLI. O domínio segue registrado no nome do cliente; só a operação do DNS é nossa.
 > **Decisão registrada:** ao final da migração o subdomínio `caligarage.donadaolabs.com` é **desligado**, não redirecionado.
 
 ---
@@ -11,83 +11,61 @@
 ## Fase 1 — Apontar DNS para a Vercel
 
 ### 1.1 Adicionar domínio no projeto Vercel — FEITO em 05/09/2026
-`caligarage.com.br` e `www.caligarage.com.br` já foram adicionados ao projeto `cali-garage`. Confirmado por `vercel domains inspect`. Enquanto o DNS não apontar, isso não tem efeito nenhum sobre o site no ar.
+`caligarage.com.br` e `www.caligarage.com.br` já foram adicionados ao projeto `cali-garage`.
 
-Para conferir a qualquer momento:
+### 1.2 Apontar nameservers no Registro.br — FEITO em 05/09/2026
+Painel do domínio → **Alterar Servidores DNS**:
+
+```
+Servidor 1:  ns1.vercel-dns.com
+Servidor 2:  ns2.vercel-dns.com
+```
+
+O Registro.br informa de 1 a 2 horas para publicar a alteração. **Não usar a tela "Editar Zona"**: ela só vale para quem mantém o DNS no Registro.br, e não é mais o caso.
+
+Com os NS na Vercel, o registro A `76.76.21.21` **deixa de ser necessário**: a Vercel resolve o domínio para o projeto automaticamente.
+
+### 1.3 Validar propagação
 ```bash
+dig NS caligarage.com.br +short @8.8.8.8
+# esperado: ns1.vercel-dns.com. / ns2.vercel-dns.com.
+
+dig A caligarage.com.br +short @8.8.8.8
+# esperado: um IP da Vercel
+
 npx vercel@latest domains inspect caligarage.com.br --scope vindonadaos-projects
 ```
 
-### 1.2 Criar os registros no Registro.br
-Painel do domínio → **Editar Zona DNS**. Os valores abaixo foram informados pela própria Vercel para esta conta, não são genéricos:
-
-| Tipo | Nome | Valor | TTL |
-|------|------|-------|-----|
-| A | (vazio, ou `@`) | `76.76.21.21` | 3600 |
-| A | `www` | `76.76.21.21` | 3600 |
-
-> A Vercel recomendou **registro A também para o `www`**, em vez do CNAME clássico. Simplifica: um único valor para os dois. O CNAME `cname.vercel-dns.com` continua válido, mas não é necessário.
-
-O SSL (Let's Encrypt) é provisionado sozinho pela Vercel de 5 a 10 minutos depois que o DNS resolver.
-
-### 1.3 Validar propagação (aguardar 5-30 min)
-```bash
-dig caligarage.com.br +short
-# esperado: 76.76.21.21
-
-dig www.caligarage.com.br +short
-# esperado: 76.76.21.21
-```
-
-Vercel detecta automaticamente e provisiona SSL Let's Encrypt em ~5-10min após DNS resolver.
+O SSL (Let's Encrypt) é provisionado sozinho de 5 a 10 minutos depois que os NS propagarem.
 
 ---
 
-## Fase 2 — CAA records (anti-emissão de SSL fraudulento)
+## Fase 2 — CAA records
 
-CAA restringe **quais autoridades certificadoras podem emitir SSL pro seu domínio**. Sem CAA, qualquer CA pode emitir. Com CAA, só as listadas conseguem — bloqueia atacante que tente clonar SSL no nome do seu domínio.
+Com a zona na Vercel, os CAA entram por CLI, não pelo Registro.br:
 
-### 2.1 Adicionar CAA records no Registro.br
+```bash
+npx vercel@latest dns add caligarage.com.br '@' CAA '0 issue "letsencrypt.org"' --scope vindonadaos-projects
+npx vercel@latest dns add caligarage.com.br '@' CAA '0 issuewild ";"' --scope vindonadaos-projects
+npx vercel@latest dns add caligarage.com.br '@' CAA '0 iodef "mailto:donadao@gmail.com"' --scope vindonadaos-projects
+```
 
-Vercel usa **Let's Encrypt**. Adicione 3 registros:
-
-| Tipo | Nome | Valor |
-|------|------|-------|
-| CAA | `caligarage.com.br` | `0 issue "letsencrypt.org"` |
-| CAA | `caligarage.com.br` | `0 issuewild ";"` |
-| CAA | `caligarage.com.br` | `0 iodef "mailto:donadao@gmail.com"` |
-
-**Tradução:**
-- `issue "letsencrypt.org"` — só Let's Encrypt pode emitir cert SAN
-- `issuewild ";"` — ninguém pode emitir wildcard `*.caligarage.com.br`
-- `iodef "mailto:..."` — qualquer tentativa de violação manda relatório pro seu email
-
-### 2.2 Validar
+Validar:
 ```bash
 dig CAA caligarage.com.br +short
-# esperado: 3 linhas com issue, issuewild e iodef
 ```
 
 ---
 
-## Fase 3 — DNSSEC (anti-sequestro de DNS)
+## Fase 3 — DNSSEC: NÃO ATIVAR
 
-DNSSEC assina criptograficamente os registros DNS. Sem isso, atacante pode envenenar cache DNS de provedores e desviar tráfego pra servidor falso.
+**Cancelada pela mudança de rota.** O "DNSSEC automático" do Registro.br só funciona quando é o próprio Registro.br que opera a zona. Com os nameservers na Vercel, quem assina a zona teria que ser a Vercel, e **a zona da Vercel não é assinada**.
 
-### 3.1 Habilitar no Registro.br
-1. Painel do domínio → seção **"DNSSEC"** ou **"Chaves DNSSEC"**
-2. Clicar em **"Habilitar DNSSEC automaticamente"** (Registro.br gerencia chaves)
-3. Aguardar ~30min para propagação
+Publicar um registro DS no Registro.br apontando para uma zona não assinada faz o domínio **parar de resolver** (SERVFAIL) para todo resolver que valida DNSSEC. Há relatos disso na comunidade da Vercel com DS órfãos.
 
-### 3.2 Validar
-```bash
-dig +dnssec caligarage.com.br | grep -E "ad;|RRSIG"
-# esperado: presença do flag "ad" (Authenticated Data) e linhas RRSIG
+Verificado em 05/09/2026 por RDAP: `delegationSigned: false`. **Manter desativado.**
 
-# Validação completa via DNSViz:
-# https://dnsviz.net/d/caligarage.com.br/dnssec/
-# (deve mostrar "Secure" em verde)
-```
+Se DNSSEC virar requisito no futuro, a saída é trazer a zona de volta para o Registro.br ou usar um provedor de DNS que assine (Cloudflare, por exemplo), e aí o site passaria a apontar por registro A.
 
 ---
 
