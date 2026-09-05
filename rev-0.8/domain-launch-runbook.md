@@ -10,23 +10,25 @@
 
 ## Fase 1 — Apontar DNS para a Vercel
 
-### 1.1 Adicionar domínio no Vercel Dashboard
-1. Acessar https://vercel.com/vindonadaos-projects/cali-garage/settings/domains
-2. Clicar em **"Add"** e digitar `caligarage.com.br`
-3. Repetir para `www.caligarage.com.br`
-4. Vercel mostra os registros DNS que você precisa criar no registrador
+### 1.1 Adicionar domínio no projeto Vercel — FEITO em 05/09/2026
+`caligarage.com.br` e `www.caligarage.com.br` já foram adicionados ao projeto `cali-garage`. Confirmado por `vercel domains inspect`. Enquanto o DNS não apontar, isso não tem efeito nenhum sobre o site no ar.
 
-### 1.2 Configurar DNS no Registro.br
-Acessar https://registro.br → painel do domínio → "Editar Zona" (DNS).
+Para conferir a qualquer momento:
+```bash
+npx vercel@latest domains inspect caligarage.com.br --scope vindonadaos-projects
+```
 
-Adicionar 2 registros:
+### 1.2 Criar os registros no Registro.br
+Painel do domínio → **Editar Zona DNS**. Os valores abaixo foram informados pela própria Vercel para esta conta, não são genéricos:
 
 | Tipo | Nome | Valor | TTL |
 |------|------|-------|-----|
-| **A** | `caligarage.com.br` (apex/raiz) | `76.76.21.21` | 3600 |
-| **CNAME** | `www` | `cname.vercel-dns.com.` | 3600 |
+| A | (vazio, ou `@`) | `76.76.21.21` | 3600 |
+| A | `www` | `76.76.21.21` | 3600 |
 
-> **Atenção:** o ponto final em `cname.vercel-dns.com.` é importante em alguns painéis — sinaliza FQDN absoluto. No Registro.br geralmente o painel coloca automático.
+> A Vercel recomendou **registro A também para o `www`**, em vez do CNAME clássico. Simplifica: um único valor para os dois. O CNAME `cname.vercel-dns.com` continua válido, mas não é necessário.
+
+O SSL (Let's Encrypt) é provisionado sozinho pela Vercel de 5 a 10 minutos depois que o DNS resolver.
 
 ### 1.3 Validar propagação (aguardar 5-30 min)
 ```bash
@@ -34,7 +36,7 @@ dig caligarage.com.br +short
 # esperado: 76.76.21.21
 
 dig www.caligarage.com.br +short
-# esperado: alguma resposta resolvendo via cname.vercel-dns.com → IP Vercel
+# esperado: 76.76.21.21
 ```
 
 Vercel detecta automaticamente e provisiona SSL Let's Encrypt em ~5-10min após DNS resolver.
