@@ -168,7 +168,7 @@
   // ============================================
   var DIAS_CURTOS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
   var DIAS_EXTENSO = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
-  var HORARIO_TXT = 'Atendemos de segunda a sexta, 7h30 às 12h e 14h às 18h.';
+  var HORARIO_TXT = 'Funcionamos de segunda a sexta, 7h30 às 12h e 14h às 18h.';
 
   function isDiaUtil(weekdayNum, ano, mes, dia) {
     if (weekdayNum === 0 || weekdayNum === 6) return false;
@@ -213,18 +213,22 @@
 
   // Frase completa da tarja e do tooltip. Usa dia por extenso porque aqui
   // sobra espaço, ao contrário do rótulo do botão.
+  // Diz explicitamente que o WhatsApp destrava junto com a oficina, senão o
+  // visitante acha que o botão quebrou em vez de estar fora de horário.
   function bannerLabel(t) {
     var nx = nextOpening(t);
     if (!nx) return 'Fechado agora.';
     if (nx.dia === 'hoje') {
       return nx.hora === '14h'
-        ? 'Fechado para o almoço. Voltamos às 14h.'
-        : 'Fechado agora. Abrimos hoje às ' + nx.hora + '.';
+        ? 'Fechado para o almoço. O WhatsApp é liberado de volta às 14h.'
+        : 'Fechado agora. O WhatsApp é liberado hoje às ' + nx.hora + '.';
     }
-    if (nx.dia === 'amanhã') return 'Fechado agora. Abrimos amanhã às ' + nx.hora + '.';
+    if (nx.dia === 'amanhã') {
+      return 'Fechado agora. O WhatsApp é liberado amanhã às ' + nx.hora + '.';
+    }
     var i = DIAS_CURTOS.indexOf(nx.dia);
     var dia = i >= 0 ? DIAS_EXTENSO[i] : nx.dia;
-    return 'Fechado agora. Abrimos na ' + dia + ' às ' + nx.hora + '.';
+    return 'Fechado agora. O WhatsApp é liberado na ' + dia + ' às ' + nx.hora + '.';
   }
 
   function updateClosedBanner(t, aberto) {
@@ -241,6 +245,24 @@
     document.body.classList.add('is-banner-on');
     // Mede a altura real: no mobile a frase quebra em duas linhas.
     document.body.style.setProperty('--banner-h', b.offsetHeight + 'px');
+  }
+
+  // Asterisco no "Pronto para resolver hoje?" do bloco final da home.
+  // Fora do expediente o "hoje" não se cumpre, então ganha nota de rodapé.
+  function updateCtaAsterisk(t, aberto) {
+    var ast = document.getElementById('cta-asterisk');
+    var nota = document.getElementById('cta-note');
+    if (!ast || !nota) return;
+    if (aberto) {
+      ast.hidden = true;
+      nota.hidden = true;
+      nota.textContent = '';
+      return;
+    }
+    ast.hidden = false;
+    nota.innerHTML = '* ' + bannerLabel(t) + ' ' + HORARIO_TXT +
+      ' <a href="./contato.html">Ver horários e endereço</a>';
+    nota.hidden = false;
   }
 
   function updateWhatsappCtas() {
@@ -268,7 +290,7 @@
         el.removeAttribute('aria-disabled');
         el.removeAttribute('tabindex');
         el.removeAttribute('title');
-        el.setAttribute('title', 'Aberto agora. ' + HORARIO_TXT);
+        el.setAttribute('title', 'Aberto agora, o WhatsApp está liberado. ' + HORARIO_TXT);
         if (!soIcone) el.textContent = el.getAttribute('data-wa-text');
         if (ariaOriginal) el.setAttribute('aria-label', ariaOriginal);
         else el.removeAttribute('aria-label');
@@ -293,6 +315,7 @@
     var aberto = businessState(t) === 'aberto';
     updateStatus();
     updateClosedBanner(t, aberto);
+    updateCtaAsterisk(t, aberto);
     updateWhatsappCtas();
   }
 

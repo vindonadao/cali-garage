@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@700&family=Shrikhand&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="./css/style.css?v=0.9.8" />
+  <link rel="stylesheet" href="./css/style.css?v=0.9.9" />
 
   <script type="application/ld+json">
   {
@@ -372,11 +372,13 @@
     <!-- CTA -->
     <section class="cta-strip">
       <div class="container">
-        <h2>Pronto para resolver<br />hoje?</h2>
+        <h2>Pronto para resolver<br />hoje?<sup class="cta-asterisk" id="cta-asterisk" hidden>*</sup></h2>
         <p>Mande uma mensagem pelo WhatsApp e traga o carro para uma avaliação rápida. Sem compromisso.</p>
         <a href="https://wa.me/5513996252628?text=Ol%C3%A1!%20Quero%20uma%20avalia%C3%A7%C3%A3o." class="btn btn-whatsapp" target="_blank" rel="noopener" data-wa-cta>
           Chamar no WhatsApp
         </a>
+        <!-- Nota do asterisco. Preenchida e exibida por js/main.js quando fechado. -->
+        <p class="cta-note" id="cta-note" hidden></p>
       </div>
     </section>
 
@@ -454,7 +456,7 @@
     </svg>
   </a>
 
-  <script src="./js/main.js?v=0.9.8" defer></script>
+  <script src="./js/main.js?v=0.9.9" defer></script>
 
 </body>
 </html>

@@ -1101,6 +1101,26 @@ p { color: var(--color-text-muted); }
 }
 .cta-strip .btn-whatsapp:hover { background-color: #f5f5f5; color: var(--color-orange-dark); }
 
+/* Asterisco do "hoje?" e sua nota (rev-0.9.9). Só aparecem fora do expediente:
+   com a oficina aberta o "hoje" se cumpre e não há o que ressalvar. */
+.cta-asterisk {
+  font-size: 0.42em;
+  vertical-align: super;
+  color: #fff;
+  margin-left: 0.1em;
+}
+.cta-note {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+  font-size: 0.85rem !important;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-note a { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+.cta-note a:hover { opacity: 0.85; }
+
 /* ---------- FOOTER ---------- */
 .site-footer {
   background-color: var(--color-bg-2);
@@ -1271,6 +1291,29 @@ p { color: var(--color-text-muted); }
   font-size: 0.82rem;
   line-height: 1.45;
 }
+/* Ponto pulsante da tarja (rev-0.9.9). Pulso lento de opacidade, não
+   pisca-pisca: conteúdo que pisca rápido é gatilho de acessibilidade
+   (WCAG 2.3.1) e cansa quem só quer ler a frase. Reutiliza o vermelho
+   que o selo de status já usa. Desliga em prefers-reduced-motion. */
+.closed-banner::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #E5484D;
+  margin-right: 0.5rem;
+  vertical-align: 1px;
+  animation: banner-pulse 2.4s ease-in-out infinite;
+}
+@keyframes banner-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.45); }
+  50%      { opacity: 0.5; box-shadow: 0 0 0 6px rgba(229, 72, 77, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .closed-banner::before { animation: none; }
+}
+
 body.is-banner-on { padding-top: var(--banner-h, 2.6rem); }
 body.is-banner-on .site-header { top: calc(1.25rem + var(--banner-h, 2.6rem)); }
 .whatsapp-float.is-closed svg { fill: var(--color-text-dim); }

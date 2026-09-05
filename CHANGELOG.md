@@ -8,6 +8,41 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.9 — Released (2026-09-05)
+
+### Foco
+Refino do aviso de fechado, tudo pedido pelo brand owner depois de ver a rev-0.9.8 no ar.
+
+### 1. O aviso agora diz que o WhatsApp destrava sozinho
+Antes: "Fechado agora. Abrimos na quarta às 7h30." O visitante via o botão apagado e podia achar que o site estava quebrado. Agora a frase liga uma coisa à outra:
+
+> "Fechado agora. **O WhatsApp é liberado na quarta às 7h30.** Funcionamos de segunda a sexta, 7h30 às 12h e 14h às 18h."
+
+No almoço: "Fechado para o almoço. O WhatsApp é liberado de volta às 14h." Com a oficina aberta, o tooltip também confirma: "Aberto agora, o WhatsApp está liberado."
+
+A mesma frase serve tarja, tooltip e nota do asterisco, de uma fonte só.
+
+### 2. Asterisco no "Pronto para resolver hoje?"
+O bloco final da home promete resolver **hoje**, o que não se cumpre num sábado. Fora do expediente o título ganha `*` e aparece abaixo do botão a nota com o estado, o horário e um link para `/contato`. Com a oficina aberta o asterisco some: aí o "hoje" se cumpre e não há o que ressalvar.
+
+### 3. Ponto pulsante na tarja
+Pedido de "algo piscando para chamar atenção", resolvido como **pulso lento** (2,4s, opacidade + halo) em vez de pisca-pisca. Conteúdo que pisca rápido é gatilho de acessibilidade (WCAG 2.3.1) e atrapalha a leitura da própria frase. Reutiliza o vermelho `#E5484D` que o selo de status já usava, e desliga em `prefers-reduced-motion`.
+
+### Decisão registrada
+**Pontos facultativos ficam fora** da lista de feriados, por ora, por decisão do brand owner. Se a oficina fechar em algum (quarta-feira de cinzas, vésperas), o site vai anunciar que está aberta num dia de portas fechadas.
+
+### Verificação
+Três estados no Chrome real, em 390px e 1280px: fechado no fim de semana, almoço e aberto. Texto da tarja, presença do asterisco, texto da nota e tooltip conferidos em cada um. Sem erro de console.
+
+### Files modificados
+- `rev-0.1/index.html` — `<sup>` do asterisco e `<p class="cta-note">`
+- `rev-0.1/js/main.js` — `bannerLabel()` reescrita, `updateCtaAsterisk()`, tooltip de aberto
+- `rev-0.1/css/style.css` — `.cta-asterisk`, `.cta-note`, `.closed-banner::before` e `@keyframes banner-pulse`
+- `rev-0.1/*.html` — `?v=0.9.9` nos assets
+- `CHANGELOG.md` — esta entrada
+
+---
+
 ## rev-0.9.8 — Released (2026-09-05)
 
 ### Foco
