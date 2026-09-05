@@ -95,7 +95,7 @@ Convention global Donadão Labs: tags `rev-X.Y` + CHANGELOG.md em todos os proje
 - **X (major)** — redesign estrutural (visual language ou IA)
 - **Y (minor)** — iteração / refinamento dentro do mesmo redesign
 
-Estado atual: **rev-0.9.7** (tarja de aviso fora do horário + correção de cache dos assets).
+Estado atual: **rev-0.9.8** (feriados municipais de Santos e estadual de SP na lógica de horário).
 
 > **Atenção ao cache:** `vercel.json` serve `css` e `js` como `immutable` por um ano. Toda alteração em `style.css` ou `main.js` exige subir o `?v=` nas 7 páginas, senão a mudança não chega em quem já visitou o site. Histórico completo em [CHANGELOG.md](./CHANGELOG.md).
 

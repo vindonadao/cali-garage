@@ -8,6 +8,38 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.9.8 — Released (2026-09-05)
+
+### Foco
+A lógica de feriados só conhecia os **nacionais**. Faltavam o feriado estadual de São Paulo e os municipais de Santos, que são justamente onde a oficina fica.
+
+Apontado pelo brand owner: a tarja dizia "Abrimos na terça às 7h30" num fim de semana em que a terça, 08/09, é o Dia de Nossa Senhora do Monte Serrat, padroeira de Santos. A oficina estaria fechada e o site mandaria o cliente aparecer.
+
+### Datas adicionadas a `holidaysBR()`
+| Data | Feriado | Esfera |
+|------|---------|--------|
+| 26/01 | Aniversário de Santos | Municipal |
+| 09/07 | Revolução Constitucionalista de 1932 | Estadual (SP) |
+| 08/09 | N. Sra. do Monte Serrat, padroeira | Municipal |
+
+Fonte: art. 245 da Lei Orgânica do Município de Santos, citado pela própria Prefeitura, e o Decreto nº 11.111/2025, que fixa o calendário de 2026. A Sexta-feira Santa e o Finados também são municipais em Santos, mas já entravam pela lista nacional.
+
+### Efeito imediato
+Neste fim de semana a segunda (07/09, Independência) e a terça (08/09, Monte Serrat) são feriados em sequência. A tarja passou de "Abrimos na terça" para **"Abrimos na quarta às 7h30"**, e o rótulo dos botões acompanha.
+
+### Verificação
+Suíte de horário ampliada de 16 para **19 casos**, todos passando. Os três novos cobrem exatamente as datas adicionadas: 26/01, 09/07 e a cadeia sáb + dom + 07/09 + 08/09 desembocando na quarta.
+
+### Files modificados
+- `rev-0.1/js/main.js` — `holidaysBR()`
+- `rev-0.1/*.html` — `?v=0.9.8` nos assets
+- `CHANGELOG.md` — esta entrada
+
+### Em aberto
+Pontos facultativos (quarta-feira de cinzas, vésperas) não estão na lista: valem para a prefeitura, não necessariamente para a oficina. Confirmar com o dono se ele fecha em alguma dessas datas.
+
+---
+
 ## rev-0.9.7 — Released (2026-09-05)
 
 ### Foco

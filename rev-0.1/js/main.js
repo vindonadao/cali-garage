@@ -92,6 +92,9 @@
   function pad2(n) { return n < 10 ? '0' + n : '' + n; }
   function key(month, day) { return pad2(month) + '-' + pad2(day); }
 
+  // Feriados de quem opera em Santos/SP: nacionais + estadual de SP +
+  // municipais (Lei Orgânica de Santos, art. 245). Sexta-feira Santa e
+  // Finados são municipais aqui também, e já entram pela lista nacional.
   function holidaysBR(year) {
     var easter = easterMonthDay(year);
     var easterDate = new Date(Date.UTC(year, easter.month - 1, easter.day));
@@ -101,13 +104,16 @@
     }
     return {
       '01-01': true,            // Confraternização Universal
+      '01-26': true,            // Aniversário de Santos (municipal)
       [offset(-48)]: true,      // Carnaval segunda
       [offset(-47)]: true,      // Carnaval terça
       [offset(-2)]: true,       // Sexta-feira Santa
       '04-21': true,            // Tiradentes
       '05-01': true,            // Dia do Trabalho
       [offset(60)]: true,       // Corpus Christi
+      '07-09': true,            // Revolução Constitucionalista (estadual SP)
       '09-07': true,            // Independência
+      '09-08': true,            // N. Sra. do Monte Serrat, padroeira (municipal)
       '10-12': true,            // N. Sra. Aparecida
       '11-02': true,            // Finados
       '11-15': true,            // Proclamação da República
