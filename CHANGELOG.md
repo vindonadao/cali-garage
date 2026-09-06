@@ -8,6 +8,42 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.11 — Released (2026-09-06)
+
+### Foco
+Fecha tudo que dependia só de código nas pendências restantes. O que sobra precisa de material de terceiro: um Measurement ID, um token de verificação, uma decisão do dono ou fotos. Passo a passo em [`rev-0.11/setup-final.md`](./rev-0.11/setup-final.md).
+
+### GA4 implementado, desligado até ter o ID
+`js/analytics.js` (novo) com **Consent Mode v2**, banner de consentimento e evento `generate_lead` no WhatsApp e no telefone.
+
+**Enquanto `GA_ID` estiver vazio, nada acontece**: sem banner, sem cookie, sem uma única requisição ao Google. Verificado no navegador: `dataLayer` indefinido, zero chamadas, zero erro. É seguro estar em produção assim, e ativar vira uma linha.
+
+- **Tudo em arquivo externo, de propósito.** O plano original previa scripts inline no `<head>`, o que exigiria reabrir o `'unsafe-inline'` removido na rev-0.10.1. Não vale trocar CSP forte por conveniência de tracking.
+- **LGPD opt-in:** consent default `denied` nas quatro chaves. O gtag carrega, mas sem storage, até a pessoa aceitar.
+- Escolha guardada em `localStorage`; link **"Cookies"** no rodapé reabre o banner.
+- Eventos por **delegação no `document`**, porque os CTAs trocam de `href` conforme o horário. Escutar o elemento direto perderia o clique.
+- CSP já liberada para `googletagmanager.com`, `google-analytics.com` e `*.analytics.google.com`.
+
+### Verificado
+| Cenário | Resultado |
+|---|---|
+| Sem `GA_ID` | banner não existe, `dataLayer` indefinido, 0 requisições ao Google, 0 erros |
+| Com ID, antes de decidir | banner com Recusar/Aceitar, consent `default` com as 4 chaves negadas |
+| Ao aceitar | consent `update`, `localStorage` = granted, banner some, link "Cookies" aparece |
+| Clique no WhatsApp | `generate_lead` com `method: whatsapp` e o texto do link |
+
+### HSTS preload: requisitos conferidos
+Os três passam: `http://` responde 308 para HTTPS, o header tem `max-age=63072000` (o dobro do mínimo) com `includeSubDomains` e `preload`, e o `www` tem HTTPS válido. **Não submetido de propósito** — preload é difícil de reverter e o `includeSubDomains` obriga todo subdomínio futuro a ter HTTPS. Decisão registrada no `setup-final.md`.
+
+### Files
+- `rev-0.1/js/analytics.js` — novo
+- `rev-0.1/css/style.css` — banner de cookies
+- `rev-0.1/*.html` — referência ao analytics, assets em `?v=0.11.0`
+- `vercel.json` — CSP com os domínios do Google
+- `rev-0.11/setup-final.md` — novo
+
+---
+
 ## rev-0.10.2 — Released (2026-09-06)
 
 ### Foco
