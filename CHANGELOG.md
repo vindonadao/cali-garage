@@ -8,6 +8,34 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.10.1 — Released (2026-09-06)
+
+### Foco
+Resposta à auditoria externa de 2026-09-06. Cada achado foi confrontado com o código e com a resposta de produção antes de virar tarefa. Veredito item a item em [`AUDIT-2026-09-06.md`](./AUDIT-2026-09-06.md).
+
+**Dos 10 achados: 5 procedem e foram corrigidos, 4 não procedem, 1 é decisão de produto já tomada.**
+
+### Corrigido
+- **CSP sem `'unsafe-inline'` em `script-src`.** O único bloco inline é o JSON-LD, que é *data block* e não é executado, então a diretiva era desnecessária. Testado antes de aplicar, reescrevendo o header no navegador: zero violações, JSON-LD válido, `main.js` rodando.
+- **`favicon.ico`** multi-resolução (16/32/48/64) gerado do SVG oficial, com `<link rel="alternate icon">` nas 8 páginas. Antes respondia 404.
+- **Cor do favicon corrigida.** Achado que a auditoria não pegou: o `favicon.svg` ainda usava `#C8622A`, a cor anterior à rev-0.3. Nunca recebeu o override para `#DD6520`.
+- **Texto pequeno no mobile.** A auditoria mediu 12,5px; o menor real era **11,2px** em três pontos (label do selo, badge do billboard, títulos do rodapé). Subiram para 12,8px.
+- **`BreadcrumbList`** nas 6 subpáginas. A home mantém o `AutoRepair`. **Não** foi adicionado `AggregateRating` em `/avaliacoes`: já existe na home, e duplicar rating em página secundária é o caso que o Google penaliza.
+
+### Falsos positivos registrados (não reabrir)
+- **HSTS ausente** — presente e mais forte que o recomendado: 2 anos, `includeSubDomains`, `preload`. **Segunda vez que esse mesmo falso positivo aparece**, já constava do `AUDIT-2026-06-04.md`. A ferramenta parece checar o header na resposta do redirect `http://`, não na do documento.
+- **Telefone placeholder** — `(13) 3222-3456` é o número real, confirmado no perfil do Google da oficina.
+- **Âncora vazia no rodapé** — são os CTAs em estado fechado, todos com `aria-label`. A "vazia" é a flutuante, que tem SVG no lugar de texto.
+- **GrowthBook** — extensão do navegador do auditor, como a própria auditoria concluiu. Também já constava de junho.
+
+### Confirmado como pendência real
+- **Analytics**: o GA4 não é esquecimento, estava represado de propósito esperando o domínio próprio. Com `caligarage.com.br` no ar, **destravou**.
+
+### Verificação
+7 páginas no Chrome real, 390px e 1280px: sem erro de console, sem 4xx, sem overflow, CTAs bloqueados corretos, CSP nova sem violação, `favicon.ico` em 200.
+
+---
+
 ## rev-0.10 — Released (2026-09-06)
 
 ### Foco
