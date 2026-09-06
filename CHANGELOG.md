@@ -8,6 +8,39 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.10.2 — Released (2026-09-06)
+
+### Foco
+Última correção da auditoria de 06/09: o CTA fora do horário deixa de ser um botão morto. Adotada a **opção (c)** sugerida pela auditoria, aprovada pelo brand owner.
+
+### O que muda fora do expediente
+| Antes | Agora |
+|-------|-------|
+| Botão cinza, sem `href`, `aria-disabled` | Botão clicável levando a `/contato#horarios` |
+| "Fechado · abre qua às 7h30" | **"Ver endereço e horários"** |
+| Topo: "Fechado" (morto) | Topo: **"Horários"**, clicável |
+| Flutuante cinza e inerte | Flutuante **some** |
+
+Na própria `/contato`, o CTA aponta para `#horarios` em vez de recarregar a página. A âncora foi criada no bloco de horário de atendimento.
+
+O aviso não se perdeu: a tarja do topo, o `title` e a nota do asterisco continuam dizendo o estado e quando o WhatsApp é liberado. O que sumiu foi só o clique que não levava a lugar nenhum.
+
+### Visual
+`.is-closed` (cinza, `cursor: not-allowed`) foi substituída por **`.is-offhours`**: contorno, texto legível, `cursor: pointer` e seta. Um botão que voltou a ser clicável não pode parecer desabilitado, senão ninguém clica. As regras órfãs da classe antiga foram removidas.
+
+### Dois bugs encontrados no teste, não na revisão de código
+- **`target="_blank"` herdado.** Os CTAs eram links de WhatsApp e carregavam `target="_blank"`. Apontando para uma página interna, o clique abria **aba nova** em vez de navegar. O atributo passou a ser removido no estado fechado e restaurado no aberto.
+- **`hidden` não escondia o flutuante.** `.whatsapp-float` declara `display: inline-flex`, que vence o `[hidden] { display: none }` do user-agent. O botão continuaria na tela, cinza e sem link: exatamente o problema que a mudança queria eliminar. Corrigido com `.whatsapp-float[hidden] { display: none !important; }`.
+
+Os dois só apareceram porque o teste checou o efeito (para onde o clique foi, qual o `display` computado) em vez de confiar no atributo.
+
+### Verificação
+- 8 páginas × 2 viewports × 2 estados = **32 combinações**: nenhum CTA visível sem `href`, nenhum overflow, nenhum erro de console.
+- Clique real em produção: leva a `/contato#horarios`, na mesma aba, com o bloco de horário visível na tela.
+- Suíte de horário: 19 casos passando (harness ajustado para a nova constante que lê `location`).
+
+---
+
 ## rev-0.10.1 — Released (2026-09-06)
 
 ### Foco

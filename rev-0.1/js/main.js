@@ -265,6 +265,12 @@
     nota.hidden = false;
   }
 
+  // Destino do CTA fora do expediente. Na página de contato aponta para a
+  // própria seção de horário; nas demais, para a página de contato.
+  var DESTINO_FECHADO = /contato(\.html)?$/.test(location.pathname)
+    ? '#horarios'
+    : './contato.html#horarios';
+
   function updateWhatsappCtas() {
     var ctas = document.querySelectorAll('[data-wa-cta]');
     if (!ctas.length) return;
@@ -286,26 +292,40 @@
 
       if (aberto) {
         el.setAttribute('href', el.getAttribute('data-wa-href'));
-        el.classList.remove('is-closed');
+        el.classList.remove('is-offhours');
         el.removeAttribute('aria-disabled');
         el.removeAttribute('tabindex');
-        el.removeAttribute('title');
+        el.hidden = false;
+        // WhatsApp abre fora do site, então volta a ser _blank.
+        el.setAttribute('target', '_blank');
+        el.setAttribute('rel', 'noopener');
         el.setAttribute('title', 'Aberto agora, o WhatsApp está liberado. ' + HORARIO_TXT);
         if (!soIcone) el.textContent = el.getAttribute('data-wa-text');
         if (ariaOriginal) el.setAttribute('aria-label', ariaOriginal);
         else el.removeAttribute('aria-label');
       } else {
-        var completo = closedLabel(t, false);
-        // O botão do topo e o flutuante têm pouco espaço.
-        var curto = el.classList.contains('nav-cta');
-        el.removeAttribute('href');
-        el.classList.add('is-closed');
-        el.setAttribute('aria-disabled', 'true');
-        el.setAttribute('tabindex', '-1');
         var frase = bannerLabel(t) + ' ' + HORARIO_TXT;
+        el.classList.add('is-offhours');
+        el.removeAttribute('aria-disabled');
+        el.removeAttribute('tabindex');
         el.setAttribute('title', frase);
-        el.setAttribute('aria-label', 'WhatsApp fora do horário de atendimento. ' + frase);
-        if (!soIcone) el.textContent = closedLabel(t, curto);
+
+        // O flutuante é um ícone de WhatsApp: mandá-lo para outra página seria
+        // enganoso, então ele some enquanto a oficina está fechada.
+        if (soIcone) {
+          el.hidden = true;
+          el.removeAttribute('href');
+          continue;
+        }
+
+        // O CTA deixa de ser botão morto e vira caminho para horário e endereço.
+        // Destino interno: tira o target=_blank herdado dos links de WhatsApp,
+        // senão o clique abre uma aba nova em vez de navegar.
+        el.removeAttribute('target');
+        el.removeAttribute('rel');
+        el.setAttribute('href', DESTINO_FECHADO);
+        el.textContent = el.classList.contains('nav-cta') ? 'Horários' : 'Ver endereço e horários';
+        el.setAttribute('aria-label', frase + ' Ver endereço e horários.');
       }
     }
   }
@@ -323,7 +343,8 @@
   // ou se algo reintroduzir o href, o link fechado não navega.
   document.addEventListener('click', function (e) {
     var a = e.target && e.target.closest ? e.target.closest('[data-wa-cta]') : null;
-    if (a && a.classList.contains('is-closed')) {
+    // Rede de segurança: CTA sem href não navega para lugar nenhum.
+    if (a && !a.getAttribute('href')) {
       e.preventDefault();
       e.stopPropagation();
     }
