@@ -8,6 +8,35 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.11.2 — Released (2026-09-06)
+
+### Foco
+GA4 **ativado** com o Measurement ID `G-33VMGDZ8BQ`, fornecido pelo cliente.
+
+### Consent Mode básico, não avançado
+O snippet padrão que o Google entrega **não tem Consent Mode**: carregaria cookies antes de qualquer consentimento. Foi usado só o Measurement ID.
+
+Mas a primeira versão nossa também não passou. Medido no navegador com o ID real, o Consent Mode **avançado** deixava escapar **1 hit de coleta antes de a pessoa decidir, e outro depois de recusar** — são os pings sem cookie que ele envia por design, e que ainda carregam IP.
+
+Isso reprovava o critério de aceitação escrito lá em junho no `rev-0.10/notes.md`: *"antes de aceitar, nenhuma chamada a google-analytics.com"*. Trocado para **Consent Mode básico**: o `gtag.js` só é injetado depois do "Aceitar".
+
+| Cenário | Requisições ao Google | Cookies `_ga` |
+|---|---|---|
+| Visitante novo, sem decidir | **0** | **0** |
+| Depois de recusar | **0** | **0** |
+| Depois de aceitar | 2 | 2 |
+
+Verificado em produção, não só local.
+
+### Também nesta revisão
+- **Evento `generate_lead`** confirmado chegando ao GA4 no clique do WhatsApp, junto do `page_view`.
+- **Política de Privacidade corrigida.** A seção 3.1 afirmava que o site "não utiliza cookies próprios ou de terceiros" — o que passaria a ser **falso** com o GA4 ativo. Reescrita: diz o que é coletado, que a medição só liga depois do aceite, quais cookies são gravados e por quanto tempo, e como mudar a escolha pelo link "Cookies" do rodapé.
+
+### Pendente do lado do cliente
+Marcar `generate_lead` como **evento de conversão** em GA4 → Administrador → Eventos. Só aparece na lista depois do primeiro disparo real.
+
+---
+
 ## rev-0.11 — Released (2026-09-06)
 
 ### Foco

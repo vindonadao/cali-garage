@@ -11,7 +11,7 @@
    Para ativar, basta preencher o Measurement ID abaixo.
    ========================================================== */
 (function () {
-  var GA_ID = '';                       // G-XXXXXXXXXX
+  var GA_ID = 'G-33VMGDZ8BQ';           // GA4 da conta do cliente
   var CHAVE = 'cg-consent';             // 'granted' | 'denied'
 
   if (!GA_ID) return;
@@ -27,7 +27,10 @@
     try { localStorage.setItem(CHAVE, v); } catch (e) {}
   }
 
-  // LGPD é opt-in: nada é liberado antes de a pessoa decidir.
+  // LGPD é opt-in de verdade: Consent Mode BÁSICO, não avançado.
+  // No modo avançado o gtag.js carrega com storage negado e ainda manda
+  // pings sem cookie para o Google, que carregam IP. Aqui o script só é
+  // injetado depois do "Aceitar": antes disso não sai uma requisição.
   gtag('consent', 'default', {
     analytics_storage: 'denied',
     ad_storage: 'denied',
@@ -36,13 +39,18 @@
     wait_for_update: 500
   });
 
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-  document.head.appendChild(s);
+  var carregado = false;
 
-  gtag('js', new Date());
-  gtag('config', GA_ID, { anonymize_ip: true });
+  function carregaGtag() {
+    if (carregado) return;
+    carregado = true;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', GA_ID, { anonymize_ip: true });
+  }
 
   function concede() {
     gtag('consent', 'update', {
@@ -51,6 +59,7 @@
       ad_user_data: 'denied',
       ad_personalization: 'denied'
     });
+    carregaGtag();
   }
 
   if (lido() === 'granted') concede();
@@ -127,6 +136,7 @@
       var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
       if (!a) return;
       var href = a.getAttribute('href') || '';
+      if (!carregado) return;
       if (href.indexOf('wa.me') !== -1) {
         gtag('event', 'generate_lead', {
           method: 'whatsapp',
