@@ -48,8 +48,12 @@ O link da assinatura da Donadão Labs no rodapé foi mantido, que é o único `d
 | sitemap | 7 URLs no domínio novo |
 | robots | `Sitemap:` no domínio novo |
 
+### Fase 6b executada (06/09/2026)
+`caligarage.donadaolabs.com` foi **desvinculado do projeto** `cali-garage` na conta da agência e passou a responder 404. Nenhum registro DNS precisou ser removido: o subdomínio resolvia pelo wildcard `*` da zona de `donadaolabs.com`, que serve outros subdomínios e foi preservado. Confirmado logo após: subdomínio 404, `caligarage.com.br` 200.
+
+Restou o projeto `cali-garage` órfão na conta da agência, sem domínio além do `.vercel.app`. Pode ser apagado.
+
 ### Pendências
-- **Desligar `caligarage.donadaolabs.com`** e apagar o projeto órfão `cali-garage` da conta da agência.
 - **Search Console**: adicionar a propriedade e submeter o sitemap. Destravado agora.
 - **GA4**: destravado. Plano em `rev-0.10/notes.md`, falta conta e Measurement ID.
 - **E-mail** `contato@caligarage.com.br`: aguardando decisão do dono. Resend Inbound resolve sem custo.
