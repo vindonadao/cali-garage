@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://caligarage.donadaolabs.com/sitemap.xml
+Sitemap: https://caligarage.com.br/sitemap.xml

@@ -8,6 +8,56 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.10 — Released (2026-09-06)
+
+### Foco
+**O site saiu do subdomínio da agência e passou a viver em `caligarage.com.br`**, na conta Vercel do próprio cliente. Fecha a pendência que travava GA4, Search Console e reenvio de sitemap desde junho.
+
+### 1. Titularidade corrigida
+O site rodava na conta Vercel da Donadão Labs (`vindonadaos-projects`), enquanto o Ops já estava na conta do cliente. Era a exceção à regra de titularidade do projeto, e só ficou evidente quando os nameservers do domínio do cliente foram apontados para a nossa conta.
+
+- Projeto **`cali-garage-site`** criado no time `cali-garage` da conta do cliente (`caligaragerepauto-3832`), ao lado do `cali-garage-ops`.
+- Deploy validado lá antes de mexer no domínio: home, páginas internas e a 404.
+- `caligarage.com.br` e `www` removidos da conta da agência e adicionados ao projeto novo. A Vercel não aceita o mesmo domínio em duas contas.
+- Deploy passou a usar o token concedido pelo cliente, revogável por ele.
+
+### 2. Domínio e DNS
+O domínio já estava comprado (31/08/2026). Os nameservers foram apontados para a Vercel direto no Registro.br, então a zona inteira é gerenciada por lá.
+
+- Propagação levou cerca de 3h40, dentro do que o Registro.br informou.
+- SSL Let's Encrypt emitido sozinho assim que o DNS resolveu.
+- **CAA**: a Vercel já mantém os dela na zona (`letsencrypt.org`, `pki.goog`, `sectigo.com`). Foi acrescentado apenas o `iodef`, que manda relatório de violação para o e-mail da agência. O `issuewild ";"` **não pôde ser criado**: a API da Vercel exige FQDN e recusa o `;`. Wildcard segue sem bloqueio explícito, limitado apenas às três CAs acima.
+- **DNSSEC continua desativado, de propósito.** O automático do Registro.br só funciona com a zona operada por ele, e a zona da Vercel não é assinada. Publicar DS apontando para zona não assinada derruba o domínio para quem valida.
+
+### 3. URLs do código
+As 35 referências a `caligarage.donadaolabs.com` em 10 arquivos (8 páginas, `robots.txt`, `sitemap.xml`) passaram para `caligarage.com.br`. Canonical, `og:url`, `og:image`, sitemap e robots. Assets subiram para `?v=0.10.0`.
+
+O link da assinatura da Donadão Labs no rodapé foi mantido, que é o único `donadaolabs.com` que deve continuar no site.
+
+### 4. www redirecionando
+`www.caligarage.com.br` servia **200 com o mesmo conteúdo do apex**, o que é conteúdo duplicado. Passou a responder **308** para o apex, via bloco `redirects` com `has` de host no `vercel.json`.
+
+### Verificação em produção
+| Item | Resultado |
+|------|-----------|
+| 7 páginas | 200, canonical apontando para a própria URL limpa |
+| 404 | 404 com a página própria |
+| `www` | 308 para o apex |
+| `http://` | 308 para HTTPS |
+| HSTS | `max-age=63072000; includeSubDomains; preload` |
+| sitemap | 7 URLs no domínio novo |
+| robots | `Sitemap:` no domínio novo |
+
+### Pendências
+- **Desligar `caligarage.donadaolabs.com`** e apagar o projeto órfão `cali-garage` da conta da agência.
+- **Search Console**: adicionar a propriedade e submeter o sitemap. Destravado agora.
+- **GA4**: destravado. Plano em `rev-0.10/notes.md`, falta conta e Measurement ID.
+- **E-mail** `contato@caligarage.com.br`: aguardando decisão do dono. Resend Inbound resolve sem custo.
+- **HSTS preload**: submeter em hstspreload.org agora que o domínio é definitivo.
+- **Fotos da oficina**: seguem pendentes.
+
+---
+
 ## rev-0.9.10 — Released (2026-09-05)
 
 ### Foco

@@ -3,6 +3,19 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "outputDirectory": "rev-0.1",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.caligarage.com.br"
+        }
+      ],
+      "destination": "https://caligarage.com.br/$1",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

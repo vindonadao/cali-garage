@@ -2,6 +2,8 @@
 
 Site estático da **Cali Garage Reparos Automotivos**, oficina mecânica em Santos/SP, Vila Matias.
 
+No ar em **https://caligarage.com.br**
+
 > **4,8★ no Google · 18 opiniões reais · 10+ anos no mesmo endereço**
 
 ---
@@ -105,7 +107,7 @@ Convention global Donadão Labs: tags `rev-X.Y` + CHANGELOG.md em todos os proje
 - **X (major)** — redesign estrutural (visual language ou IA)
 - **Y (minor)** — iteração / refinamento dentro do mesmo redesign
 
-Estado atual: **rev-0.9.10** (auditoria ponta a ponta, página 404 própria, travessões fora da copy).
+Estado atual: **rev-0.10** (no ar em caligarage.com.br, na conta Vercel do cliente).
 
 > **Atenção ao cache:** `vercel.json` serve `css` e `js` como `immutable` por um ano. Toda alteração em `style.css` ou `main.js` exige subir o `?v=` nas 7 páginas, senão a mudança não chega em quem já visitou o site. Histórico completo em [CHANGELOG.md](./CHANGELOG.md).
 
