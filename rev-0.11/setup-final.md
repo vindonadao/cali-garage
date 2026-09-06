@@ -5,7 +5,15 @@
 
 ---
 
-## 1. GA4 — código pronto, falta o Measurement ID
+## 1. GA4 — ✅ CONCLUÍDO em 06/09/2026
+
+Measurement ID `G-33VMGDZ8BQ` ativo, com **Consent Mode básico**: nenhuma requisição ao Google e nenhum cookie antes do aceite. Verificado em produção nos três cenários. `generate_lead` confirmado no clique do WhatsApp.
+
+**Resta ao cliente:** marcar `generate_lead` como evento de conversão em GA4 → Administrador → Eventos. Só aparece na lista depois do primeiro disparo real.
+
+<details><summary>Registro do que foi feito</summary>
+
+### Como era
 
 ### Estado
 Implementado e testado na rev-0.11: `js/analytics.js` com Consent Mode v2, banner de consentimento e evento `generate_lead` no WhatsApp e no telefone. A CSP já libera os domínios do Google.
@@ -29,7 +37,21 @@ Preencher `GA_ID` em `js/analytics.js`, subir o `?v=` dos assets e publicar. Uma
 
 ---
 
-## 2. Google Search Console — precisa do token de verificação
+## 2. Google Search Console — ✅ VERIFICADO em 06/09/2026
+
+Propriedade do tipo **Domínio** verificada por TXT no DNS. O registro foi adicionado por CLI na zona da Vercel e propagou em menos de 20 segundos.
+
+```
+google-site-verification=BNGo67pMsXR4EOzZyZc3yN8Tnx4RpmJqK0Qb0mYlwoc
+```
+
+Sitemap validado antes do envio: XML válido, 7 URLs, todas em 200 com `index, follow`, e o `robots.txt` apontando para ele.
+
+**Resta ao cliente:** enviar `sitemap.xml` em Search Console → Sitemaps, e pedir indexação da home em Inspeção de URL.
+
+<details><summary>Registro do que foi feito</summary>
+
+### Como era
 
 ### O que o Vinicius faz
 1. Acessar [search.google.com/search-console](https://search.google.com/search-console), **também com a conta do cliente**.
@@ -105,3 +127,5 @@ Celular recente serve. Horizontal, luz do dia, sem filtro. Eu trato, corto e oti
 ## Fora do escopo
 
 **Horário no Google Business Profile.** Continua publicando "Abre seg. às 08:00", errado. Está com outra pessoa do lado do cliente.
+
+</details>
