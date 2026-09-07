@@ -1,6 +1,14 @@
 # E-mail do domínio — como está montado
 
-> Configurado em 06 e 07/09/2026. `contato@caligarage.com.br`, custo zero.
+> **Status: funcionando** desde 07/09/2026. Recebimento e envio validados.
+> `contato@caligarage.com.br`, custo zero.
+>
+> **Na troca de MX, o primeiro teste sumiu sem bounce.** Foi cache do MX antigo no
+> servidor do remetente: ele aceitou a mensagem e entregou num destino que já não
+> existia. Não é defeito, e some sozinho em minutos. Ao trocar MX de novo, esperar
+> antes de concluir que falhou.
+>
+> **Subir o DMARC para `p=reject` a partir de 21/09/2026**, se não houver problema de entrega.
 > Duas contas gratuitas dividindo o trabalho, ambas no nome do cliente.
 
 ---
