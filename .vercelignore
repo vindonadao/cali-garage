@@ -14,3 +14,6 @@ README.md
 cali garage ops/
 *.xlsx
 *.zip
+
+# Fotos do cliente: originais têm EXIF com GPS. Só as WebP em rev-0.1/img/galeria sobem.
+fotos-cliente/
