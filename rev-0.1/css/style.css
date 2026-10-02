@@ -829,20 +829,23 @@ p { color: var(--color-text-muted); }
   overflow: hidden;
 }
 
-.about-image::after {
-  content: 'EST. 2010';
+/* rev-0.13.1: o selo "EST. 2010" (::after) saiu; no lugar, o endereço real em .about-place */
+.about-place {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
   font-family: var(--font-body);
-  font-size: 0.8rem;
-  letter-spacing: 0.18em;
-  color: rgba(255,255,255,0.7);
-  background-color: rgba(0,0,0,0.4);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.85);
+  background-color: rgba(0,0,0,0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255,255,255,0.18);
-  padding: 0.35rem 0.7rem;
+  padding: 0.35rem 0.75rem;
   border-radius: var(--radius-pill);
 }
+.about-text .pill-ghost { margin-bottom: 1.5rem; }
 
 .about-text h2 { margin-bottom: 1.5rem; }
 .about-text p { font-size: 1.05rem; margin-bottom: 1rem; line-height: 1.65; }
@@ -1795,7 +1798,7 @@ body::before {
 }
 .has-photo > :not(.card-photo):not(.cta-photo) { position: relative; z-index: 2; }
 .hero-billboard.has-photo > .billboard-corner { position: absolute; }
-.about-image.has-photo::after { z-index: 2; }
+.about-image.has-photo > .about-place { position: absolute; }
 
 .hero-billboard.has-photo .hero-billboard-logo {
   width: 58%;
@@ -1830,4 +1833,5 @@ body::before {
   .cta-strip .has-photo .cta-photo { object-position: 30% 100%; height: 115%; top: auto; bottom: 0; }
   .hero-billboard.has-photo .hero-billboard-logo { width: 66%; }
   .about-image.has-photo .cg-logo-img { width: 52%; }
+  .about-image.has-photo > .about-place { top: auto; bottom: 1rem; right: auto; left: 1rem; }
 }

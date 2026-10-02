@@ -8,6 +8,22 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.13.1 — Released (2026-10-02)
+
+### Faixa de CTA
+O senhor de moto saiu da foto, a pedido do Vinicius; o resto ficou idêntico (mesmo método de máscara da rev-0.13). Arquivos renomeados para `home-cta-v2-*.webp` por causa do cache `immutable`.
+
+### Bloco "Sobre" da home
+O Vinicius apontou que os rótulos pareciam de estúdio de design, não de oficina.
+- **"EST. 2010" saiu.** Era um `::after` no CSS, sem fonte que confirmasse a data. No lugar, o endereço real: "Av. Campos Sales, 98 · Vila Matias" (no celular, no canto inferior da foto, pra não cobrir o logo).
+- **"/ Sobre · estúdio" virou "A oficina".** Os outros rótulos da home perderam as barras e o "/ 005": "Por que escolher", "Serviços", "Depoimentos".
+- Mais respiro entre o rótulo e o título.
+- Números: "Google rating" → "Nota no Google"; "18+ Opiniões reais" → "18 Avaliações no Google" (o "+" sugeria mais do que existe); "100% Compromisso" → horário real "Seg–Sex · 7h30–12h · 14h–18h".
+
+`?v=` em `0.13.1` nas 8 páginas.
+
+---
+
 ## rev-0.13 — Released (2026-10-02)
 
 ### Foco
