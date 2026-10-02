@@ -8,6 +8,15 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.13.2 — Released (2026-10-02)
+
+### Correção
+O número do topo da home dizia **"10+ anos na Vila Matias"**. O correto, confirmado pelo Vinicius, é **4 anos** no endereço. Trocado para "4". Não confundir com o tempo de atendimento da equipe: há avaliações de clientes que levam o carro ao Fabricio e ao Carlinhos há 25 ou 30 anos, desde antes da mudança para a Vila Matias.
+
+Só HTML mudou; o `?v=` continua em `0.13.1`.
+
+---
+
 ## rev-0.13.1 — Released (2026-10-02)
 
 ### Faixa de CTA
