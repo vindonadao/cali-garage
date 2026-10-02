@@ -1758,3 +1758,76 @@ body::before {
 .whatsapp-float {
   z-index: 100;
 }
+
+/* ---------- FOTOS DA HOME (rev-0.13) ----------
+   Cartões do hero e do "Sobre" e a faixa de CTA ganham foto real da oficina.
+   O logo sai do centro e vai pro canto superior; véus escuros no topo e na
+   base garantem leitura do logo, das tags e do status sobre a foto. */
+.has-photo .card-photo,
+.has-photo .cta-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hero-billboard.has-photo,
+.about-image.has-photo {
+  background: var(--color-card);
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.about-image.has-photo { flex-direction: column; padding: 1.75rem; }
+
+.hero-billboard.has-photo::before,
+.about-image.has-photo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(14, 10, 8, 0.82) 0%, rgba(14, 10, 8, 0.35) 26%, transparent 45%),
+    linear-gradient(0deg, rgba(14, 10, 8, 0.7) 0%, transparent 30%);
+}
+.has-photo > :not(.card-photo):not(.cta-photo) { position: relative; z-index: 2; }
+.hero-billboard.has-photo > .billboard-corner { position: absolute; }
+.about-image.has-photo::after { z-index: 2; }
+
+.hero-billboard.has-photo .hero-billboard-logo {
+  width: 58%;
+  align-self: flex-start;
+  margin: 0;
+}
+.about-image.has-photo .cg-logo-img { width: 44%; }
+
+.cta-strip .container.has-photo {
+  background: var(--color-orange-dark);
+}
+.cta-strip .container.has-photo::before,
+.cta-strip .container.has-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+/* laranja da marca em multiply: tinge a foto sem lavar as sombras */
+.cta-strip .container.has-photo::before {
+  background: linear-gradient(135deg, var(--color-orange), var(--color-orange-dark));
+  mix-blend-mode: multiply;
+}
+/* véu central pra leitura do título e do botão */
+.cta-strip .container.has-photo::after {
+  background: radial-gradient(ellipse 60% 75% at 50% 50%, rgba(120, 45, 10, 0.55), rgba(120, 45, 10, 0.15) 70%, transparent);
+}
+
+@media (max-width: 720px) {
+  .hero-billboard.has-photo .billboard-tags { display: none; }
+  .cta-strip .has-photo .cta-photo { object-position: 30% 100%; height: 115%; top: auto; bottom: 0; }
+  .hero-billboard.has-photo .hero-billboard-logo { width: 66%; }
+  .about-image.has-photo .cg-logo-img { width: 52%; }
+}

@@ -8,6 +8,34 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.13 — Released (2026-10-02)
+
+### Foco
+A home deixa de ser genérica: os dois cartões que só tinham o logo no centro e a faixa de CTA ganham foto real da oficina. E, a pedido do Fabricio, o chão de todas as fotos foi limpo.
+
+### Home com 3 fotos (diferentes das da galeria)
+| Lugar | Foto | Logo |
+|---|---|---|
+| Cartão do hero | Galpão com carros nos elevadores | Canto superior esquerdo, tags embaixo, status no inferior |
+| Cartão do "Sobre" | Fachada ao entardecer | Canto superior esquerdo, "EST. 2010" no direito |
+| Faixa "Pronto para resolver hoje?" | Cliente chegando de moto | Sem logo; laranja da marca em `multiply` sobre a foto |
+
+- Véus escuros no topo e na base dos cartões pra leitura do logo e do status.
+- No celular, as tags do hero somem (encostavam no status) e a foto do CTA é reenquadrada.
+- Hero com `fetchpriority="high"`; as outras com `loading="lazy"`. WebP em 600/1000 (cartões) e 800/1400/2000 (faixa).
+- Na foto do "Sobre", o Fabricio foi removido a pedido do Vinicius.
+
+### Chão limpo em 11 fotos
+Manchas de óleo, marcas de pneu e sujeira removidas por IA, **mas só os pixels do chão que mudaram entram na foto final**: a imagem da IA é alinhada por homografia à original e aplicada com máscara (polígono do chão ∩ diferença real). Pessoas, carros, peças e prédio continuam com os pixels originais.
+
+Isso não é preciosismo: na conferência a IA tinha **inventado uma pessoa** no fundo de uma foto e **apagado o mecânico** deitado sob o Onix em outra. A máscara barrou as duas coisas. O papelão sujo sob o carro em "Nossa equipe" saiu junto com as manchas.
+
+### Cache
+- Galeria com conteúdo novo: arquivos renomeados para `-v2-*.webp`, porque o cache `immutable` seguraria os antigos.
+- CSS mudou: `?v=` subiu para `0.13.0` nas 8 páginas.
+
+---
+
 ## rev-0.12 — Released (2026-10-02)
 
 ### Foco

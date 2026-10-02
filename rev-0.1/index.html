@@ -34,7 +34,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@700&family=Shrikhand&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="./css/style.css?v=0.11.2" />
+  <link rel="stylesheet" href="./css/style.css?v=0.13.0" />
 
   <script type="application/ld+json">
   {
@@ -136,14 +136,16 @@
           </div>
         </div>
 
-        <div class="hero-billboard" role="img" aria-label="Cali Garage, oficina em Santos/SP">
+        <div class="hero-billboard has-photo">
+          <img class="card-photo" src="./img/home/home-hero-1000.webp" srcset="./img/home/home-hero-600.webp 600w, ./img/home/home-hero-1000.webp 1000w" sizes="(max-width: 900px) 92vw, 45vw" width="1000" height="1250" fetchpriority="high" decoding="async" alt="Galpão da Cali Garage com vários carros em serviço nos elevadores" />
+
+          <span class="hero-billboard-logo cg-logo-img" role="img" aria-label="Cali Garage Reparos Automotivos"></span>
+
           <div class="billboard-tags">
             <span class="billboard-tag">Mecânica</span>
             <span class="billboard-tag">Elétrica</span>
             <span class="billboard-tag">Diagnóstico</span>
           </div>
-
-          <span class="hero-billboard-logo cg-logo-img" role="img" aria-label="Cali Garage Reparos Automotivos"></span>
 
           <div class="billboard-corner" id="biz-status" data-biz-status>
             <span class="dot" aria-hidden="true"></span>
@@ -291,7 +293,8 @@
     <!-- ABOUT (asymmetric) -->
     <section class="section section-cream">
       <div class="container about-grid">
-        <div class="about-image" aria-label="Fachada da Cali Garage">
+        <div class="about-image has-photo">
+          <img class="card-photo" src="./img/home/home-sobre-1000.webp" srcset="./img/home/home-sobre-600.webp 600w, ./img/home/home-sobre-1000.webp 1000w" sizes="(max-width: 900px) 92vw, 45vw" width="1000" height="1250" loading="lazy" decoding="async" alt="Entrada da Cali Garage ao entardecer, com a oficina iluminada ao fundo" />
           <span class="cg-logo-img" role="img" aria-label="Cali Garage"></span>
         </div>
         <div class="about-text">
@@ -372,7 +375,8 @@
 
     <!-- CTA -->
     <section class="cta-strip">
-      <div class="container">
+      <div class="container has-photo">
+        <img class="cta-photo" src="./img/home/home-cta-1400.webp" srcset="./img/home/home-cta-800.webp 800w, ./img/home/home-cta-1400.webp 1400w, ./img/home/home-cta-2000.webp 2000w" sizes="(max-width: 1200px) 100vw, 1200px" width="2000" height="801" loading="lazy" decoding="async" alt="" />
         <h2>Pronto para resolver<br />hoje?<sup class="cta-asterisk" id="cta-asterisk" hidden>*</sup></h2>
         <p>Mande uma mensagem pelo WhatsApp e traga o carro para uma avaliação rápida. Sem compromisso.</p>
         <a href="https://wa.me/5513996252628?text=Ol%C3%A1!%20Quero%20uma%20avalia%C3%A7%C3%A3o." class="btn btn-whatsapp" target="_blank" rel="noopener" data-wa-cta>
@@ -457,8 +461,8 @@
     </svg>
   </a>
 
-  <script src="./js/main.js?v=0.11.2" defer></script>
-  <script src="./js/analytics.js?v=0.11.2" defer></script>
+  <script src="./js/main.js?v=0.13.0" defer></script>
+  <script src="./js/analytics.js?v=0.13.0" defer></script>
 
 </body>
 </html>
