@@ -33,3 +33,6 @@ build/
 *.tmp
 *.bak
 .vercel
+
+# Fotos do cliente (originais e editadas): só as WebP otimizadas entram no site
+fotos-cliente/

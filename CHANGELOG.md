@@ -8,6 +8,32 @@ Versionamento por revisões: `rev-X.Y` onde:
 
 ---
 
+## rev-0.12 — Released (2026-10-02)
+
+### Foco
+Fecha a pendência mais antiga do site: **a galeria ganhou fotos reais**. Até aqui eram 8 placeholders listrados e a frase "Fotos reais em breve".
+
+### Seleção
+O cliente mandou 23 fotos, muitas da mesma cena. Ficaram 8 cenas diferentes, aprovadas pelo Vinicius, em ordem de fora pra dentro: fachada, atendimento, avaliação do motor, área de serviço (3 fotos), equipe e mão na massa. Uma vista do galpão foi recusada na aprovação e trocada.
+
+### Tratamento
+- Recorte em 4:5, o formato do card da galeria
+- Ajuste leve de cor, contraste e nitidez, sem filtro e sem IA
+- **Todas as placas visíveis desfocadas**, porque são carros de clientes
+- EXIF removido (localização e dados do aparelho)
+- WebP em 480 e 800 px com `srcset`/`sizes` alinhados aos breakpoints do CSS (4, 2 e 1 colunas), `loading="lazy"`, `width`/`height` fixos. Total de 1,7 MB pros 16 arquivos; o celular baixa só a versão de 800.
+
+### Legendas
+As antigas prometiam bancada, alinhamento, freios e diagnóstico eletrônico, que nenhuma foto mostra. Trocadas pelo que aparece de fato. Os `alt` descrevem cada cena.
+
+### Fora do git
+Originais e editadas em JPEG ficam em `fotos-cliente/`, no `.gitignore`. Só as WebP otimizadas sobem.
+
+### Sem mudança de CSS/JS
+O CSS já tinha `.gallery-item img` desde a rev-0.1, então `style.css` e `main.js` não mudaram e o `?v=` continua em `0.11.2`. Nomes de imagem são novos, então o cache `immutable` não segura nenhuma versão antiga.
+
+---
+
 ## rev-0.11.2 — Released (2026-09-06)
 
 ### Foco
